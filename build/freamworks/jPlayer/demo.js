@@ -5,9 +5,9 @@ $(document).ready(function () {
 		cssSelectorAncestor: "#jp_container_N"
 	}, [
 		{
-			title: "Busted Chump",
+			title: "天下",
 			artist: "ADG3",
-			mp3: "http://m1.music.126.net/Cvnq6ODRf4IHt2Ro0BQS_A==/3319425604605875.mp3",
+			mp3: "http://flatfull.com/themes/assets/musics/adg3com_bustedchump.mp3",
 			poster: "images/m0.jpg"
     },
 		{
