@@ -1,0 +1,10 @@
+{
+    "main": "index.html",
+    "name": "luck-web-pc",
+    "version": "1.0.0",
+    "window": {
+        "toolbar": false,
+        "icon": "images/icons/icon_90.png",
+        "frame": false
+    }
+}
