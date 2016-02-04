@@ -14,7 +14,9 @@ define(function (require, exports, module) {
         verify_code: "http://user.dxt.cn/verify/code",
         register_phone: "http://user.dxt.cn/v2/register",
         banner: common_url + "game/yydb/home",
-        hot: common_url + "game/yydb/list/hot"
+        hot: common_url + "game/yydb/list/hot",
+        detail: common_url + "game/yydb/detail",
+        user_list: common_url + "game/yydb/user/list"
     };
     //下面是组件的url
     var m_URL = {
@@ -29,9 +31,9 @@ define(function (require, exports, module) {
         page_bar: "../../module/page-bar/page-bar.html",
         shaidan_box: "../../module/shaidan-box/shaidan-box.html",
         footer_bar: "../../module/footer/footer-bar.html",
-        record_table:"../../module/record-table/record-table.html",
-        winning_record:"../../module/winning-record/winning-record.html",
-        announced_box:"../../module/announced-box/announced-box.html"
+        record_table: "../../module/record-table/record-table.html",
+        winning_record: "../../module/winning-record/winning-record.html",
+        announced_box: "../../module/announced-box/announced-box.html"
     }
     exports.get = function (name) {
         if (URL[name]) {

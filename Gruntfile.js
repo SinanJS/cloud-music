@@ -21,7 +21,7 @@ module.exports = function (grunt) {
         },
         clean: {
             build: {
-                src: ["./build/**/*", "!./build/freamworks/bootstrap-3.3.5/*"],
+                src: ["./build/**/*", "!./build/lib/bootstrap-3.3.5/*"],
                 filter: "isFile"
             }
         },
@@ -75,9 +75,9 @@ module.exports = function (grunt) {
         },
         connect: {
             options: {
-                port: 9555,
+                port: 9556,
                 hostname: "localhost", //默认就是这个值，可配置为本机某个 IP，localhost 或域名
-                livereload: 35730 //声明给 watch 监听的端口
+                livereload: 35731 //声明给 watch 监听的端口
             },
             //10.254.120.143
             server: {
@@ -136,8 +136,8 @@ module.exports = function (grunt) {
                 files: [ //下面文件的改变就会实时刷新网页
                     'src/*.html',
                     'src/css/*.css',
-					'src/freamworks/**/*.js',
-					'src/freamworks/*.js',
+					'src/lib/**/*.js',
+					'src/lib/*.js',
 					'src/module/**/*',
 					'src/pages/**/*'
                 ]
