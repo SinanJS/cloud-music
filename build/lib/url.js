@@ -17,7 +17,7 @@ define(function (require, exports, module) {
         home: "./views/home.html",
         search_res: "./views/search_res.html",
         error: "./views/error.html"
-    }
+    };
     exports.get = function (name) {
         if (URL[name]) {
             return URL[name];
