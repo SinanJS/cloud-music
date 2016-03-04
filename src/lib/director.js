@@ -3,7 +3,7 @@
 // Version 1.2.6
 //
 
-(function (exports) {
+define(function (require, exports, module) {
 
     /*
      * browser.js: Browser specific functionality for director.
@@ -155,7 +155,7 @@
         onHashChanged: function () {}
     };
 
-    var Router = exports.Router = function (routes) {
+    var Router = function (routes) {
         if (!(this instanceof Router)) return new Router(routes);
 
         this.params = {};
@@ -737,6 +737,6 @@
         }
     };
 
+    module.exports=Router;
 
-
-}(typeof exports === "object" ? exports : window));
+});

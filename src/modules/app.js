@@ -1,28 +1,31 @@
-// 所有模块都通过 define 来定义
-define(function (require, exports, module) {
-    // 通过 require 引入依赖
-    var Vue = require('vue');
-    var Router = require('director');
-
-    var app = {};
-    app.prototype = {
-        routers: {
-            '/sys': help.randerFn({
-                id: "#router-view",
-                templateUrl: "content/system.html"
-            })
-        }
+//构建路由表
+seajs.use(['director', 'gethtml'], function (Router, Dom) {
+    var d = new Dom();
+    var list = function (name) {
+        return function () {
+            d.getDom(name);
+        };
     };
-    //路由表
 
-
-    if (!window.location.hash) {
-        window.location.hash = "#/sys";
+    var routes = {
+        '/home': list('home'),
+        '/search_res': list('search_res'),
+        '/error': list('error')
+    };
+    if (!location.hash) {
+        location.hash = '#/home';
     }
+
+    $(window).bind('hashchange', function () {
+        if (!location.hash) {
+            location.hash = '#/home';
+        } else if (!routes[location.hash.substr(1)]) {
+            location.hash = '#/error';
+        }
+    });
+
+
     var router = Router(routes);
     router.init();
-
-});
-seajs.use(['./help', 'storage', 'url', 'vue.min', 'director'], function (Help, Storage, url, Vue, Director) {
 
 });

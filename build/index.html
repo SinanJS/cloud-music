@@ -269,7 +269,9 @@
                     <section class="hbox stretch">
 
                         <section class="vbox">
+                            <section id='view_main'>
 
+                            </section>
                             <footer class="footer bg-dark">
                                 <div id="jp_container_N">
                                     <div class="jp-type-playlist">
@@ -353,7 +355,8 @@
         <script src="lib/bootstrap-3.3.5/app.plugin.js"></script>
         <script type="text/javascript" src="lib/jPlayer/jquery.jplayer.min.js"></script>
         <script type="text/javascript" src="lib/jPlayer/add-on/jplayer.playlist.min.js"></script>
-        <script type="text/javascript" src="lib/jPlayer/demo.js"></script>
+        <script type="text/javascript" src="lib/sea.js"></script>
+        <!--<script type="text/javascript" src="lib/jPlayer/demo.js"></script>-->
         <script type="application/javascript">
             // seajs 的简单配置
             seajs.config({
@@ -366,7 +369,7 @@
                 }
             });
             // 加载入口模块
-            seajs.use("../login/login.js");
+            seajs.use("./modules/app.js");
 
         </script>
 
