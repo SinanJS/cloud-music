@@ -346,6 +346,7 @@
                 </section>
             </section>
         </section>
+        <aduio id="player"></aduio>
         <script src="lib/jquery-1.11.3/jquery.js"></script>
         <!-- Bootstrap -->
         <script src="lib/bootstrap-3.3.5/bootstrap.js"></script>
@@ -356,7 +357,7 @@
         <script type="text/javascript" src="lib/jPlayer/jquery.jplayer.min.js"></script>
         <script type="text/javascript" src="lib/jPlayer/add-on/jplayer.playlist.min.js"></script>
         <script type="text/javascript" src="lib/sea.js"></script>
-        <!--<script type="text/javascript" src="lib/jPlayer/demo.js"></script>-->
+        <!--        <script type="text/javascript" src="lib/jPlayer/demo.js"></script>-->
         <script type="application/javascript">
             // seajs 的简单配置
             seajs.config({
@@ -365,7 +366,8 @@
                     "WebModule": 'web-module.js',
                     "jquery": "jquery-1.11.3/jquery.js",
                     'vue': 'vue.min.js',
-                    'url': "url.js"
+                    'url': "url.js",
+                    'tPlayer': 'palyer.js'
                 }
             });
             // 加载入口模块
