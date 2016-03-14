@@ -1,3 +1,48 @@
 <section>
-    <h2>Welcome!!</h2>
+    <ul id='list'>
+
+    </ul>
+    <p id='now'></p>
+    <button id='btn_pause'>播放</button>
+    <button id='add-1'>一见钟情</button>
+    <button id='add-2'>Still Here</button>
+    <button id='add-3'>采花郎</button>
+    <button id='rem-1'>删除 窗外</button>
 </section>
+<script>
+    //构建路由表
+    seajs.use(['playlist', 'jquery'], function(Playlist, $) {
+        var pl = new Playlist();
+        $('#add-1').bind('click', function() {
+            var item = {
+                "song_id": 39321211,
+                'singer_name': '蓝心湄',
+                'song_name': "一见钟情",
+                "duration": "04:18",
+                "suffix": "mp3",
+                "bitRate": 128,
+                "typeDescription": "标准品质",
+                "url": "http://m5.file.xiami.com/1/759/1759/9711/120137_440256_l.mp3?auth_key=d3e05584bce2777bfd169c470b0cddf5-1458000000-0-null",
+                "size": "3.94 MB",
+                "type": 0
+            };
+            pl.addItem(item);
+        });
+        $('#add-2').bind('click', function() {
+            var item2 = {
+                "song_id": 89543,
+                'singer_name': 'Lene Marlin',
+                'song_name': 'Still Here',
+                "duration": "03:41",
+                "suffix": "mp3",
+                "bitRate": 128,
+                "typeDescription": "标准品质",
+                "url": "http://m5.file.xiami.com/1/507/23507/168988/1769020012_658615_l.mp3?auth_key=28da6eb96fba6cef5b63474bfd5d81bf-1458000000-0-null",
+                "size": "3.38 MB",
+                "type": 0
+            };
+            pl.addItem(item2);
+        });
+    });
+
+</script>

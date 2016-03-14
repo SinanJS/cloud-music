@@ -124,17 +124,16 @@ define(function (require, exports, module) {
     };
     //检查重复
     TPlayer.prototype.checkOverlap = function (arr, song_id) {
-            var isOverlap = true;
-            if (arr && arr instanceof Array) {
-                arr.map(function (i) {
-                    if (i.song_id === song_id) {
-                        isOverlap = false;
-                    }
-                });
-            }
-            return isOverlap;
+        var isOverlap = true;
+        if (arr && arr instanceof Array) {
+            arr.map(function (i) {
+                if (i.song_id === song_id) {
+                    isOverlap = false;
+                }
+            });
         }
-        //上一曲
+        return isOverlap;
+    }
 
 
     module.exports = TPlayer;
