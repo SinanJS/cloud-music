@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="lib/bootstrap-3.3.5/css/simple-line-icons.css" type="text/css" />
     <link rel="stylesheet" href="lib/bootstrap-3.3.5/css/font.css" type="text/css" />
     <link rel="stylesheet" href="lib/bootstrap-3.3.5/css/app.css" type="text/css" />
+    <link rel="stylesheet" href="less/main.css"/>
 </head>
 
 <body class="">
@@ -52,7 +53,7 @@
                     </div>
                 </div>
             </form>
-            <div class="navbar-right ">
+            <div class="navbar-right " style="display:none">
                 <ul class="nav navbar-nav m-n hidden-xs nav-user user">
                     <li class="hidden-xs">
                         <a href="#" class="dropdown-toggle lt" data-toggle="dropdown">
@@ -115,6 +116,16 @@
                                 <a href="modal.lockme.html" data-toggle="ajaxModal">注销</a>
                             </li>
                         </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav m-n hidden-xs nav-user user">
+                    <li class="hidden-xs">
+                        <p class="txt-login">欢迎来访，请<span id='btn-login'>登录 </span></p>
+                    </li>
+                    <li class="hidden-xs">
+                        <p class="txt-login">或<span id='btn-sign'>注册</span></p>
                     </li>
                 </ul>
             </div>
