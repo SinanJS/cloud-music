@@ -1,5 +1,6 @@
-seajs.use(['director', 'gethtml', 'playlist'], function (Router, Dom, Playlist) {
+seajs.use(['director', 'gethtml', 'playlist','vue.min','url'], function (Router, Dom, Playlist,Vue,urlList) {
     var d = new Dom();
+
     var list = function (name) {
         return function () {
             d.getDom(name);
@@ -35,4 +36,18 @@ seajs.use(['director', 'gethtml', 'playlist'], function (Router, Dom, Playlist) 
         var song_id = $(this).attr('data-id');
         pl.removeItem(song_id);
     });*/
+    ///模板页控制器
+    var TemplateCtrl=function(){
+
+    };
+    TemplateCtrl.prototype={
+        login:function(){
+
+        }
+    };
+    $('#btn-login').bind('click',function(){
+        $.get(urlList.get('login'),function(res){
+            $('body').append(res);
+        });
+    });
 });

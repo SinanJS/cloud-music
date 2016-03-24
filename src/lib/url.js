@@ -16,7 +16,8 @@ define(function (require, exports, module) {
     var m_URL = {
         home: "./views/home.html",
         search_res: "./views/search_res.html",
-        error: "./views/error.html"
+        error: "./views/error.html",
+        login:"./views/login.html"
     };
     exports.get = function (name) {
         if (URL[name]) {
