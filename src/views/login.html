@@ -2,23 +2,24 @@
     <section class="panel panel-default" id="login-panel">
         <header class="panel-heading font-bold">
             欢迎登录 优易乐坊
+            <i class="icon-close" style='float:right;cursor: pointer;'></i>
         </header>
         <div class="panel-body">
             <form role="form">
                 <div class="form-group">
                     <label>Email/手机号</label>
-                    <input class="form-control" placeholder="Enter email" type="email">
+                    <input class="form-control" placeholder="输入Email或手机号" type="email">
                 </div>
                 <div class="form-group">
                     <label>密码</label>
-                    <input class="form-control" placeholder="Password" type="password">
+                    <input class="form-control" placeholder="密码" type="password">
                 </div>
                 <div class="checkbox i-checks">
                     <label>
-                        <input checked="" disabled="" type="checkbox"><i></i> Check me out
+                        <input checked="" disabled="" type="checkbox"><i></i> 保持登录状态
                     </label>
                 </div>
-                <button type="submit" class="btn btn-sm btn-default">登录</button>
+                <button type="submit" id='login-submit' class="btn btn-block btn-primary">登录</button>
             </form>
         </div>
     </section>
@@ -26,3 +27,18 @@
 <div class="dialog_bg">
 
 </div>
+<script>
+    var closeDialog=function(){
+        $('.dialog_bg').fadeOut(400);
+        $('.dialog').fadeOut(200);
+        setTimeout(function(){
+            $('.dialog,.dialog_bg').remove();
+        },500)
+    };
+    $(document).on('click','.icon-close,.dialog_bg',function(){
+        closeDialog();
+    });
+    $("#login-submit").bind('click',function(){
+
+    });
+</script>
