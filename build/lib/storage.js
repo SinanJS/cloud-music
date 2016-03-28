@@ -5,7 +5,7 @@ define(function (require, exports, module) {
     Lstorage.prototype.setItem = function (_key, _data, _time) {
         try {
 
-            var time = _time ? _time : 72000; //默认在线2小时
+            var time = _time ? _time : 2592000000; //默认在线30天
 
             if (typeof _data === "object") {
                 _data._create_time = new Date().getTime();
@@ -34,5 +34,12 @@ define(function (require, exports, module) {
             }
         }
     };
+
+    Lstorage.prototype.removeItem = function (_key) {
+        if (!!localStorage.getItem(_key)) {
+            localStorage.removeItem(_key);
+        }
+    };
+
     module.exports = Lstorage;
 });

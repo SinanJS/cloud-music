@@ -4,22 +4,22 @@
             欢迎登录 优易乐坊
             <i class="icon-close" style='float:right;cursor: pointer;'></i>
         </header>
-        <div class="panel-body">
+        <div class="panel-body" id="login-dia">
             <form role="form">
                 <div class="form-group">
                     <label>Email/手机号</label>
-                    <input class="form-control" placeholder="输入Email或手机号" type="email">
+                    <input class="form-control" placeholder="输入Email或手机号" type="text" v-model="ep">
                 </div>
                 <div class="form-group">
                     <label>密码</label>
-                    <input class="form-control" placeholder="密码" type="password">
+                    <input class="form-control" placeholder="密码" type="password" v-model="pwd">
                 </div>
-                <div class="checkbox i-checks">
+               <!-- <div class="checkbox i-checks">
                     <label>
                         <input checked="" disabled="" type="checkbox"><i></i> 保持登录状态
                     </label>
-                </div>
-                <button type="submit" id='login-submit' class="btn btn-block btn-primary">登录</button>
+                </div>-->
+                <button type="submit" id='login-submit' class="btn btn-block btn-primary" v-on:click="loginSubmit">登录</button>
             </form>
         </div>
     </section>
@@ -28,17 +28,66 @@
 
 </div>
 <script>
-    var closeDialog=function(){
-        $('.dialog_bg').fadeOut(400);
-        $('.dialog').fadeOut(200);
-        setTimeout(function(){
-            $('.dialog,.dialog_bg').remove();
-        },500)
-    };
-    $(document).on('click','.icon-close,.dialog_bg',function(){
-        closeDialog();
-    });
-    $("#login-submit").bind('click',function(){
+    seajs.use(['url','vue.min','storage'],function(url,Vue,Storage){
+        var storage=new Storage();
+        var closeDialog=function(){
+            $('.dialog_bg').fadeOut(400);
+            $('.dialog').fadeOut(200);
+            setTimeout(function(){
+                $('.dialog,.dialog_bg').remove();
+            },500)
+        };
 
+        var loginDia = new Vue({
+            el:"#login-dia",
+            data:{
+                ep:"",
+                pwd:""
+            },
+            methods:{
+                loginSubmit:function(){
+                    //手机正则
+
+                    var regPhone=/^1[34578]\d{9}$/;
+                    //email
+                    var regEmail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+                    var ep=this.ep;
+                    var loginInfo={};
+                    if(regEmail.test(ep)){
+                        loginInfo.email=ep;
+                        loginInfo.phone="";
+                    }else if(regPhone.test(ep)){
+                        loginInfo.phone=ep;
+                        loginInfo.email="";
+                    }
+                    loginInfo.pwd=this.pwd;
+                    console.log(loginInfo);
+                    $.ajax({
+                        url:url.get('u_login'),
+                        type:"GET",
+                        data:loginInfo,
+                        success:function(res){
+                            storage.setItem("u_t",res);
+                            closeDialog();
+                            $("#id-btns").hide();
+                            $("#user-info").show();
+                            var userInfo=new Vue({
+                                el:"#user-info",
+                                data:{
+                                    nick_name:storage.getItem('u_t').nick_name
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+        });
+
+
+        $(document).on('click','.icon-close,.dialog_bg',function(){
+            closeDialog();
+        });
     });
+
 </script>

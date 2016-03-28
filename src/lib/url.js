@@ -1,16 +1,11 @@
 define(function (require, exports, module) {
 
-    var common_url = "";
-    (function () {
-        if (window.location.hostname === "static.luck.dxt.cn") {
-            common_url = "http://luck.dxt.cn/";
-        } else {
-            common_url = "http://luck.dxt.cn/";
-        }
-    })();
+    var common_url = "http://localhost:3000";
 
     var URL = {
-        login_phone: "http://user.dxt.cn/v2/login/phone",
+        u_login: common_url+"/login",
+        u_signin: common_url+"/sign_in",
+        u_logout: common_url+"/logout"
     };
     //下面是组件的url
     var m_URL = {
