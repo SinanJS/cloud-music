@@ -8,12 +8,19 @@
             <form role="form">
                 <div class="form-group">
                     <label>Email/手机号</label>
-                    <input class="form-control" placeholder="输入Email或手机号" type="text" v-model="ep">
-                    <small class="orange sm"><i class="icon-close"></i>错误信息</small>
+                    <input class="form-control" placeholder="输入Email或手机号" type="text" v-model="ep" v-on:blur="verifyEP">
+                    <small class="orange sm none" id="ep-error">
+                        <i class="fa fa-warning" style="margin-right: 5px;"></i>
+                        <span v-text="ep_error"></span>
+                    </small>
                 </div>
                 <div class="form-group">
                     <label>密码</label>
-                    <input class="form-control" placeholder="密码" type="password" v-model="pwd">
+                    <input class="form-control" placeholder="密码" type="password" v-model="pwd" v-on:blur="verifyEP">
+                    <small class="orange sm none" id="pwd-error">
+                        <i class="fa fa-warning" style="margin-right: 5px;"></i>
+                        <span  v-text="pwd_error"></span>
+                    </small>
                 </div>
                <div class="checkbox i-checks">
                     <label>
@@ -29,7 +36,7 @@
 
 </div>
 <script>
-    seajs.use(['url','vue.min','storage'],function(url,Vue,Storage){
+    seajs.use(['url','vue.min','storage','verify'],function(url,Vue,Storage,verify){
         var storage=new Storage();
         var closeDialog=function(){
             $('.dialog_bg').fadeOut(400);
@@ -43,7 +50,9 @@
             el:"#login-dia",
             data:{
                 ep:"",
-                pwd:""
+                pwd:"",
+                ep_error:'',
+                pwd_error:""
             },
             methods:{
                 loginSubmit:function(){
@@ -68,20 +77,49 @@
                         type:"GET",
                         data:loginInfo,
                         success:function(res){
-                            storage.setItem("u_t",res.data_set);
-                            closeDialog();
-                            $("#id-btns").hide();
-                            $("#user-info").show();
-                            var userInfo=new Vue({
-                                el:"#user-info",
-                                data:{
-                                    nick_name:res.data_set.nick_name
-                                }
-                            });
+                            //登录成功
+                            if(res.status==="1" || res.status==='2') {
+                                storage.setItem("u_t", res.data_set);
+                                closeDialog();
+                                $("#id-btns").hide();
+                                $("#user-info").show();
+                                var userInfo = new Vue({
+                                    el: "#user-info",
+                                    data: {
+                                        nick_name: res.data_set.nick_name
+                                    }
+                                });
+                            }
+                            //登录失败
+                            else if(res.status==='0'){
+                                alert(res.msg);
+                            }
                         }
                     });
 
+                },
+                verifyEP:function(){
+                    var ep=this.ep;
+                    var pwd=this.pwd;
+                    if(!verify.v_phoneNum(ep) && !verify.v_email(ep)){
+                        this.ep_error="请填写正确的手机号或邮箱";
+                        $('#ep-error').removeClass('none');
+                        $('#login-submit').attr('disabled','disabled');
+                        return false;
+                    }else if((verify.v_phoneNum(ep) || verify.v_email(ep)) && pwd.length===0) {
+                        $('#ep-error').addClass('none');
+                        this.pwd_error="请输入密码";
+                        $('#pwd-error').removeClass('none');
+                        $('#login-submit').attr('disabled','disabled');
+                        return false;
+                    }else {
+                        $('#pwd-error').addClass('none');
+                        $('#ep-error').addClass('none');
+                        $('#login-submit').removeAttr('disabled');
+                        return true;
+                    }
                 }
+
             }
         });
 

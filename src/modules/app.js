@@ -88,6 +88,6 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
         tmplCtrl.login();
     });
     $("#logout").bind('click',function(){
-        tmplCtrl.logout(u_t.user_id);
+        tmplCtrl.logout(storage.getItem('u_t').user_id);
     });
 });

@@ -1,8 +1,16 @@
 define(function (require, exports, module) {
     var Verify = {
         v_phoneNum: function (phone) {
-            var reg = /^((\(\d{2,3}\))|(\d{3}\-))?1[3,8,5]{1}\d{9}$/;
+            var reg = /^1[34578]\d{9}$/;
             if (!phone || !reg.test(phone)) {
+                return false;
+            } else {
+                return true;
+            }
+        },
+        v_email: function (email) {
+            var reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+            if (!email || !reg.test(email)) {
                 return false;
             } else {
                 return true;
