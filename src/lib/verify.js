@@ -1,5 +1,11 @@
 define(function (require, exports, module) {
     var Verify = {
+        //去掉前后空格
+        replaceSpace:function(txt){
+            var reg= /(^\s*)|(\s*$)/g;
+            return txt.replace(reg,'');
+        },
+
         v_phoneNum: function (phone) {
             var reg = /^1[34578]\d{9}$/;
             if (!phone || !reg.test(phone)) {

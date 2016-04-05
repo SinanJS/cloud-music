@@ -70,9 +70,15 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
                 }
             });
         },
-        //注册
+        //登录
         login:function(){
             $.get(urlList.get('login'),function(res){
+                $('body').append(res);
+            });
+        },
+        //注册
+        signIn:function(){
+            $.get(urlList.get('sign_in'),function(res){
                 $('body').append(res);
             });
         }
@@ -86,6 +92,9 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
 
     $('#btn-login').bind('click',function(){
         tmplCtrl.login();
+    });
+    $('#btn-sign').bind('click',function(){
+        tmplCtrl.signIn();
     });
     $("#logout").bind('click',function(){
         tmplCtrl.logout(storage.getItem('u_t').user_id);
