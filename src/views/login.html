@@ -22,7 +22,7 @@
                         <span  v-text="pwd_error"></span>
                     </small>
                 </div>
-               <div class="checkbox i-checks">
+                <div class="checkbox i-checks">
                     <label>
                         <input checked="" type="checkbox"><i></i> 保持登录状态
                     </label>
@@ -36,49 +36,49 @@
 
 </div>
 <script>
-    seajs.use(['url','vue.min','storage','verify'],function(url,Vue,Storage,verify){
-        var storage=new Storage();
-        var closeDialog=function(){
+    seajs.use(['url', 'vue.min', 'storage', 'verify'], function(url, Vue, Storage, verify) {
+        var storage = new Storage();
+        var closeDialog = function() {
             $('.dialog_bg').fadeOut(400);
             $('.dialog').fadeOut(200);
-            setTimeout(function(){
+            setTimeout(function() {
                 $('.dialog,.dialog_bg').remove();
-            },500)
+            }, 500)
         };
 
         var loginDia = new Vue({
-            el:"#login-dia",
-            data:{
-                ep:"",
-                pwd:"",
-                ep_error:'',
-                pwd_error:""
+            el: "#login-dia",
+            data: {
+                ep: "",
+                pwd: "",
+                ep_error: '',
+                pwd_error: ""
             },
-            methods:{
-                loginSubmit:function(){
+            methods: {
+                loginSubmit: function() {
                     //手机正则
 
-                    var regPhone=/^1[34578]\d{9}$/;
+                    var regPhone = /^1[34578]\d{9}$/;
                     //email
-                    var regEmail=/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
-                    var ep=this.ep;
-                    var loginInfo={};
-                    if(regEmail.test(ep)){
-                        loginInfo.email=ep;
-                        loginInfo.phone="";
-                    }else if(regPhone.test(ep)) {
+                    var regEmail = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+                    var ep = this.ep;
+                    var loginInfo = {};
+                    if (regEmail.test(ep)) {
+                        loginInfo.email = ep;
+                        loginInfo.phone = "";
+                    } else if (regPhone.test(ep)) {
                         loginInfo.phone = ep;
                         loginInfo.email = "";
                     }
-                    loginInfo.pwd=this.pwd;
+                    loginInfo.pwd = this.pwd;
                     console.log(loginInfo);
                     $.ajax({
-                        url:url.get('u_login'),
-                        type:"GET",
-                        data:loginInfo,
-                        success:function(res){
+                        url: url.get('u_login'),
+                        type: "GET",
+                        data: loginInfo,
+                        success: function(res) {
                             //登录成功
-                            if(res.status==="1" || res.status==='2') {
+                            if (res.status === "1" || res.status === '2') {
                                 storage.setItem("u_t", res.data_set);
                                 closeDialog();
                                 $("#id-btns").hide();
@@ -91,28 +91,28 @@
                                 });
                             }
                             //登录失败
-                            else if(res.status==='0'){
+                            else if (res.status === '0') {
                                 alert(res.msg);
                             }
                         }
                     });
 
                 },
-                verifyEP:function(){
-                    var ep=this.ep;
-                    var pwd=this.pwd;
-                    if(!verify.v_phoneNum(ep) && !verify.v_email(ep)){
-                        this.ep_error="请填写正确的手机号或邮箱";
+                verifyEP: function() {
+                    var ep = this.ep;
+                    var pwd = this.pwd;
+                    if (!verify.v_phoneNum(ep) && !verify.v_email(ep)) {
+                        this.ep_error = "请填写正确的手机号或邮箱";
                         $('#ep-error').removeClass('none');
-                        $('#login-submit').attr('disabled','disabled');
+                        $('#login-submit').attr('disabled', 'disabled');
                         return false;
-                    }else if((verify.v_phoneNum(ep) || verify.v_email(ep)) && pwd.length===0) {
+                    } else if ((verify.v_phoneNum(ep) || verify.v_email(ep)) && pwd.length === 0) {
                         $('#ep-error').addClass('none');
-                        this.pwd_error="请输入密码";
+                        this.pwd_error = "请输入密码";
                         $('#pwd-error').removeClass('none');
-                        $('#login-submit').attr('disabled','disabled');
+                        $('#login-submit').attr('disabled', 'disabled');
                         return false;
-                    }else {
+                    } else {
                         $('#pwd-error').addClass('none');
                         $('#ep-error').addClass('none');
                         $('#login-submit').removeAttr('disabled');
@@ -124,7 +124,7 @@
         });
 
 
-        $(document).on('click','.icon-close,.dialog_bg',function(){
+        $(document).on('click', '.icon-close,.dialog_bg', function() {
             closeDialog();
         });
     });
