@@ -128,7 +128,7 @@
                     var phone=this.phone;
                     if(!verify.v_phoneNum(phone)){
                         this.phone_error='手机号码格式不正确';
-                        $('.orange.sm').addClass('none');
+                       // $('.orange.sm').addClass('none');
                         $("#phone-error").removeClass('none');
                         $("#sign-submit").attr('disabled','disabled');
                         return false;
@@ -142,7 +142,7 @@
                     var nickname=this.nickname;
                     if(!nickname){
                         this.nick_error='请输入昵称';
-                        $('.orange.sm').addClass('none');
+                     //   $('.orange.sm').addClass('none');
                         $("#nick-error").removeClass('none');
                         $("#sign-submit").attr('disabled','disabled');
                         return false;
@@ -156,26 +156,26 @@
                     var email=this.email;
                     if(!verify.v_email(email)){
                         this.email_error='Email格式不正确';
-                        $('.orange.sm').addClass('none');
+                        //$('.orange.sm').addClass('none');
                         $("#email-error").removeClass('none');
                         $("#sign-submit").attr('disabled','disabled');
                     }else {
                         this.email_error='';
                         $("#email-error").addClass('none');
-                        $("#sign-submit").removeAttr('disabled','disabled');
+                        $("#sign-submit").removeAttr('disabled');
                     }
                 },
                 verifyPwd:function(){
                     var pwd=this.pwd;
                     if(!pwd){
                         this.pwd_error='请输入密码';
-                        $('.orange.sm').addClass('none');
+                        //$('.orange.sm').addClass('none');
                         $("#pwd-error").removeClass('none');
                         $("#sign-submit").attr('disabled','disabled');
                     }else {
                         this.pwd_error='';
                         $("#pwd-error").addClass('none');
-                        $("#sign-submit").attr('disabled','disabled');
+                        $("#sign-submit").removeAttr('disabled');
                     }
                 },
                 verifyPwd2:function(){
@@ -183,17 +183,63 @@
                     var pwd2=this.pwd2;
                     if(!verify.pwd_diff(pwd,pwd2)){
                         this.pwd2_error='两次输入密码不一致';
-                        $('.orange.sm').addClass('none');
+                        //$('.orange.sm').addClass('none');
                         $("#pwd2-error").removeClass('none');
                         $("#sign-submit").attr('disabled','disabled');
                     }else {
                         this.pwd2_error='';
                         $("#pwd2-error").addClass('none');
-                        $("#sign-submit").attr('disabled','disabled');
+                        $("#sign-submit").removeAttr('disabled');
                     }
                 },
                 signSubmit:function(){
-                    alert('sfsdfsd');
+                    var nick_name=this.nickname;
+                    var phone = this.phone;
+                    var email=this.email;
+                    var pwd=this.pwd;
+
+                    var signInfo={
+                        nick_name:nick_name,
+                        phone:phone,
+                        email:email,
+                        pwd:pwd
+                    };
+                    $.ajax({
+                        url: url.get('u_signin'),
+                        type: "GET",
+                        data: signInfo,
+                        success: function(result) {
+                            var loginInfo={
+                                email:result.email,
+                                phone:result.phone,
+                                pwd:result.pwd
+                            };
+                            $.ajax({
+                                url: url.get('u_login'),
+                                type: "GET",
+                                data: loginInfo,
+                                success: function(res) {
+                                    //登录成功
+                                    if (res.status === "1" || res.status === '2') {
+                                        storage.setItem("u_t", res.data_set);
+                                        closeDialog();
+                                        $("#id-btns").hide();
+                                        $("#user-info").show();
+                                        var userInfo = new Vue({
+                                            el: "#user-info",
+                                            data: {
+                                                nick_name: res.data_set.nick_name
+                                            }
+                                        });
+                                    }
+                                    //登录失败
+                                    else if (res.status === '0') {
+                                        alert(res.msg);
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
             }
         });
