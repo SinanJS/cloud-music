@@ -2,6 +2,9 @@
   overflow-y: scroll;
   margin-bottom: 50px;
 }
+.none {
+  display: none;
+}
 .txt-login {
   height: 52px;
   line-height: 52px;
@@ -31,5 +34,11 @@
 }
 #login-panel {
   margin-bottom: 0px;
+}
+.orange {
+  color: #E5A72C;
+}
+.sm {
+  font-size: 11px;
 }
 /*# sourceMappingURL=main.css.map */
