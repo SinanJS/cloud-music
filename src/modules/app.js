@@ -19,11 +19,12 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     }
 
     $(window).bind('hashchange', function () {
+        var r=location.hash.split("?")[0];
         if (!location.hash) {
             location.hash = '#/home';
-        } /*else if (!routes[location.hash.substr(1)]) {
+        } else if (!routes[r.substr(1)]) {
             location.hash = '#/error';
-        }*/
+        }
     });
 
 
@@ -31,7 +32,7 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     router.init();
 
     //playlist
-    var pl = new Playlist();
+    window.pl = new Playlist();
     pl.readList();
     /*$('.jp-playlist-item-remove').click(function () {
         // alert('触发');
@@ -101,10 +102,7 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
                     type:"GET",
 
                     success:function(res){
-                        if(window.location.hash!=="#/search_res"){
-                            window.location.hash="#/search_res";
-                        }
-                        window.location.search="s="+keywords+"&type=1";
+                        window.location.hash="#/search_res?s="+keywords+"&type=1";
                     }
                 });
             }

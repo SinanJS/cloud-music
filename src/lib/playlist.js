@@ -75,8 +75,10 @@ define(function (require, exports, module) {
                 localStorage.setItem('play_list', JSON.stringify({
                     list: p_l
                 }));
+                return true;
             } else {
                 alert('已经添加过了');
+                return false;
             }
 
 
@@ -95,6 +97,7 @@ define(function (require, exports, module) {
             //this.addDom(item.song_name, item.singer_name);
             window.myPlaylist.add(i);
             localStorage.setItem('play_list', JSON.stringify(p));
+            return true;
         }
 
         /*} catch (e) {

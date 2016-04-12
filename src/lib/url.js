@@ -6,7 +6,8 @@ define(function (require, exports, module) {
         u_login: common_url+"/login",
         u_signin: common_url+"/sign_in",
         u_logout: common_url+"/logout",
-        u_search:common_url+"/search"
+        u_search:common_url+"/search",
+        u_song:common_url+"/song"
     };
     //下面是组件的url
     var m_URL = {

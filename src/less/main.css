@@ -51,4 +51,42 @@
 .single-song-row:nth-child(2n+1) {
   background-color: #FFFFFF;
 }
+.singer-li {
+  float: left;
+  display: inline-block;
+  overflow: hidden;
+  line-height: 1.4;
+  margin: 10px;
+}
+.u-cover-5 {
+  width: 145px;
+  height: 145px;
+}
+.u-cover {
+  position: relative;
+  display: block;
+}
+.u-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.singer-name {
+  font-size: 12px;
+  position: relative;
+  top: 5px;
+  white-space: nowrap;
+  width: 10em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.album-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.singer-bg {
+  background-image: url("../images/icons/loading.png");
+  background-size: 100%;
+}
 /*# sourceMappingURL=main.css.map */

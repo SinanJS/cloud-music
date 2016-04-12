@@ -1,40 +1,73 @@
 <section class="panel panel-default">
     <header class="panel-heading bg-light">
         <ul class="nav nav-tabs nav-justified">
-            <li class="active"><a href="#single-song" data-toggle="tab">单曲</a></li>
-            <li class=""><a href="#profile" data-toggle="tab">歌手</a></li>
-            <li><a href="#messages" data-toggle="tab">专辑</a></li>
+            <li class="active"><a href="#single-song-panel" data-toggle="tab" id="single-song-tab">单曲</a></li>
+            <li class=""><a href="#singer-panel" data-toggle="tab" id="singer-tab">歌手</a></li>
+            <li><a href="#album-panel" data-toggle="tab" id="album-tab">专辑</a></li>
             <!--<li><a href="#settings" data-toggle="tab">主播电台</a></li>-->
         </ul>
     </header>
     <div class="panel-body">
         <div class="tab-content">
-            <div class="tab-pane active" id="single-song">
+            <div class="tab-pane active" id="single-song-panel">
                 <div class="container">
-                    <div class="row single-song-row" v-for="i in songs">
-                        <div class="col-md-5">{{i.bMusic.name}}</div>
-                        <div class="col-md-2">{{i.artists[0].name}}</div>
-                        <div class="col-md-3">《{{i.album.name}}》</div>
-                        <div class="col-md-2">{{i.bMusic.playTime | msToMin}}</div>
+
+                    <div class="row single-song-row" v-for="i in songs" v-if="i.audition.name">
+                        <div class="col-md-5 col-sm-5">
+                            <i class="fa fa-play-circle play-icon" data-songId="{{i.id}}"></i>
+                            {{i.audition.name}}
+                        </div>
+                        <div class="col-md-2 col-sm-2">{{i.artists[0].name}}</div>
+                        <div class="col-md-3 col-sm-3 album-name">《{{i.album.name}}》</div>
+                        <div class="col-md-2 col-sm-2">{{i.bMusic.playTime | msToMin}}</div>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="profile">profile</div>
-            <div class="tab-pane" id="messages">message</div>
+            <div class="tab-pane" id="singer-panel">
+                <p style="padding-left: 50px;">找到<span style="color:#F41616;" v-text="count"></span>位歌手</p>
+                <ul>
+                    <li class="singer-li" v-for="i in artists">
+                        <div class="u-cover u-cover-5 singer-bg">
+                            <a href="/artist?id={{i.id}}">
+                                <img :src="i.img1v1Url">
+                                <span title="{{i.name}}" class="msk"></span>
+                            </a>
+                        </div>
+                        <p class="singer-name">
+                            <a class="nm f-thide s-fc0" href="/artist?id={{i.id}}" title="{{i.name}}" v-text="i.name"></a>
+                            <span v-text="'('+i.trans+')'" v-show="i.trans"></span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-pane" id="album-panel">message</div>
         </div>
     </div>
 </section>
 <script>
     seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
         filter.msToMin();
+        //转化成正常时间字符串
+        function msTomin(val){
+            var time=new Date(val);
+            var min=time.getMinutes();
+            var s=time.getSeconds();
+            if(min<10){
+                min="0"+min.toString();
+            }
+            if(s<10){
+                s= "0"+ s.toString();
+            }
+            return min.toString()+":"+ s.toString();
+        }
         var SearchRes=function(){
 
         };
         SearchRes.prototype.singleSong=function(callback){
             var query={};
-            query.s=xhr.getSearch().s;
-            query.type=xhr.getSearch().type;
-            query.limit=10;
+            query.s=xhr.getSearch(location.hash).s;
+            query.type=xhr.getSearch(location.hash).type;
+            query.limit=50;
             query.offset=0;
             console.log(query);
             $.ajax({
@@ -54,16 +87,87 @@
 
         SearchRes.prototype.singleSongList=function(res){
             var v_search=new Vue({
-                el:"#single-song",
+                el:"#single-song-panel",
                 data:{
                     songs:res.songs,
                     songCount:res.songCount
                 }
             });
-        }
+            $('.play-icon').bind('click',function(){
+                $('.play-icon').css('color','#788188');
+                $(this).css('color','#F05050');
+                var song_id=$(this).attr('data-songId');
+                $.ajax({
+                    url:url.get('u_song'),
+                    type:"GET",
+                    data:{
+                        id:song_id,
+                        ids:"["+song_id+"]"
+                    },
+                    success:function(res){
+                        console.log(res);
+                        var song=res.songs[0];
+                        var item = {
+                            "song_id": song_id,
+                            'singer_name': song.artists[0].name,
+                            'singer_pic': song.artists[0].img1v1Url,
+                            'song_name':song.name,
+                            "duration": msTomin(song.audition.playTime),
+                            "suffix": "mp3",
+                            "url": song.mp3Url,
+                            "type": 0
+                        };
+                        var flag=pl.addItem(item);
+                        console.log(flag);
+                       if(flag){
+                           myPlaylist.playlist.map(function(val,index){
+                               if(val.id===song_id){
+                                   myPlaylist.play(index);
+                               }
+                           });
+                       };
+
+                    }
+                });
+            });
+        };
+
+        SearchRes.prototype.singer=function(callback){
+            var query={};
+            query.s=xhr.getSearch(location.hash).s;
+            query.type=100;
+            query.limit=49;
+            query.offset=0;
+            $('#singer-tab').bind('click',function(){
+                $.ajax({
+                    url:url.get('u_search')+"?s="+query.s+"&type="+query.type+"&limit="+query.limit+"&offset="+query.offset,
+                    type:"GET",
+                    //data:query,
+                    success:function(res){
+                        console.log(res);
+                        callback(res.result);
+                    },
+                    error:function(e){
+                        console.log(e);
+                    }
+                });
+            });
+        };
+
+        SearchRes.prototype.singerList=function(res){
+            var v_singerList=new Vue({
+                el:"#singer-panel",
+                data:{
+                    count:res.artistCount,
+                    artists:res.artists
+                }
+            });
+        };
 
         var searchRes=new SearchRes();
         searchRes.singleSong(searchRes.singleSongList);
+        searchRes.singer(searchRes.singerList);
+
     });
 
 

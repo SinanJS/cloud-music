@@ -6,6 +6,7 @@ $(document).ready(function () {
     }, [{
         title: "花间梦事",
         artist: "ADG3",
+        id:"1",
         mp3: "http://m2.music.126.net/4fEzGRFEKLplsm6QarBHxQ==/1228154488233466.mp3",
         poster: "images/m0.jpg"
     }], {
