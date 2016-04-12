@@ -26,6 +26,20 @@ define(function (require, exports, module) {
                 var dateTime = y + '-' + m + '-' + d + ' ' + t + "." + ms;
                 return dateTime;
             });
+        },
+        msToMin:function(){
+            Vue.filter('msToMin', function (val) {
+                var time=new Date(val);
+                var min=time.getMinutes();
+                var s=time.getSeconds();
+                if(min<10){
+                    min="0"+min.toString();
+                }
+                if(s<10){
+                    s= "0"+ s.toString();
+                }
+                return min.toString()+":"+ s.toString();
+            });
         }
     };
     module.exports = Filter;

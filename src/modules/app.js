@@ -8,7 +8,9 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     };
 
     var routes = {
-        '/home': list('home'),
+        '/home':{
+            "?([\s\S]*)": function(a){d.getDom('home');console.log(a)}
+        } ,
         '/search_res': list('search_res'),
         '/error': list('error')
     };
@@ -19,9 +21,9 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     $(window).bind('hashchange', function () {
         if (!location.hash) {
             location.hash = '#/home';
-        } else if (!routes[location.hash.substr(1)]) {
+        } /*else if (!routes[location.hash.substr(1)]) {
             location.hash = '#/error';
-        }
+        }*/
     });
 
 
@@ -81,6 +83,31 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
             $.get(urlList.get('sign_in'),function(res){
                 $('body').append(res);
             });
+        },
+        //搜索
+        /*s：搜索的内容
+
+         offset：偏移量（分页用）
+
+         limit：获取的数量
+
+         type：搜索的类型*/
+        search:function(event){
+            if(event.keyCode===13){
+                var keywords=$('#search-input').val();
+                var page=1;
+                $.ajax({
+                    url:urlList.get('u_search'),
+                    type:"GET",
+
+                    success:function(res){
+                        if(window.location.hash!=="#/search_res"){
+                            window.location.hash="#/search_res";
+                        }
+                        window.location.search="s="+keywords+"&type=1";
+                    }
+                });
+            }
         }
     };
 
@@ -99,4 +126,9 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     $("#logout").bind('click',function(){
         tmplCtrl.logout(storage.getItem('u_t').user_id);
     });
+
+    $('#search-input').keypress(function(e){
+       tmplCtrl.search(e);
+    });
+
 });

@@ -1,3 +1,70 @@
-<section>
-    <h2>搜索结果页面</h2>
+<section class="panel panel-default">
+    <header class="panel-heading bg-light">
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#single-song" data-toggle="tab">单曲</a></li>
+            <li class=""><a href="#profile" data-toggle="tab">歌手</a></li>
+            <li><a href="#messages" data-toggle="tab">专辑</a></li>
+            <!--<li><a href="#settings" data-toggle="tab">主播电台</a></li>-->
+        </ul>
+    </header>
+    <div class="panel-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="single-song">
+                <div class="container">
+                    <div class="row single-song-row" v-for="i in songs">
+                        <div class="col-md-5">{{i.bMusic.name}}</div>
+                        <div class="col-md-2">{{i.artists[0].name}}</div>
+                        <div class="col-md-3">《{{i.album.name}}》</div>
+                        <div class="col-md-2">{{i.bMusic.playTime | msToMin}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="profile">profile</div>
+            <div class="tab-pane" id="messages">message</div>
+        </div>
+    </div>
 </section>
+<script>
+    seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
+        filter.msToMin();
+        var SearchRes=function(){
+
+        };
+        SearchRes.prototype.singleSong=function(callback){
+            var query={};
+            query.s=xhr.getSearch().s;
+            query.type=xhr.getSearch().type;
+            query.limit=10;
+            query.offset=0;
+            console.log(query);
+            $.ajax({
+                url:url.get('u_search')+"?s="+query.s+"&type="+query.type+"&limit="+query.limit+"&offset="+query.offset,
+                type:"GET",
+                //data:query,
+                success:function(res){
+                    console.log(res);
+                    callback(res.result);
+                },
+                error:function(e){
+                    console.log(e);
+                }
+            });
+
+        };
+
+        SearchRes.prototype.singleSongList=function(res){
+            var v_search=new Vue({
+                el:"#single-song",
+                data:{
+                    songs:res.songs,
+                    songCount:res.songCount
+                }
+            });
+        }
+
+        var searchRes=new SearchRes();
+        searchRes.singleSong(searchRes.singleSongList);
+    });
+
+
+</script>

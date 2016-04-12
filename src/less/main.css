@@ -41,4 +41,14 @@
 .sm {
   font-size: 11px;
 }
+.single-song-row {
+  height: 35px;
+  line-height: 35px;
+}
+.single-song-row:nth-child(2n) {
+  background-color: #f7f7f7;
+}
+.single-song-row:nth-child(2n+1) {
+  background-color: #FFFFFF;
+}
 /*# sourceMappingURL=main.css.map */

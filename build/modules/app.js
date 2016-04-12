@@ -81,6 +81,25 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
             $.get(urlList.get('sign_in'),function(res){
                 $('body').append(res);
             });
+        },
+        //搜索
+        search:function(event){
+            if(event.keyCode===13){
+                var keywords=$('#search-input').val();
+                var page=1;
+                $.ajax({
+                    url:urlList.get('u_search'),
+                    type:"GET",
+                    data:{
+                        q:keywords,
+                        page:page,
+                        size:50
+                    },
+                    success:function(res){
+                        console.log(res);
+                    }
+                });
+            }
         }
     };
 
@@ -99,4 +118,9 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     $("#logout").bind('click',function(){
         tmplCtrl.logout(storage.getItem('u_t').user_id);
     });
+
+    $('#search-input').keypress(function(e){
+       tmplCtrl.search(e);
+    });
+
 });
