@@ -63,6 +63,10 @@
     line-height: 1.4;
     margin: 10px;
 }
+#list-length{
+    margin-left: 10px;
+    font-size: 14px;
+}
 .u-cover-5 {
     width: 145px;
     height: 145px;
@@ -93,4 +97,99 @@
 .singer-bg{
     background-image: url("../images/icons/loading.png");
     background-size: 100%;
+}
+/*播放器*/
+.bg-dark{
+    position: fixed;
+    z-index: 99;
+    left: 0px;
+    bottom: 0;
+}
+.jp-gui{
+    width: 86%;
+    float: right;
+}
+.jp-detail{
+    float: left;
+    width: 14%;
+}
+/*播放页面*/
+.needle{
+    height: 130px;
+    img{
+        height: 100%;
+        transform: rotate(-39deg);
+        transform-origin: 13px 13px 0px;
+        top: -11px;
+        position: relative;
+        left: 106px;
+        z-index: 9;
+    }
+}
+.disc-box{
+    position: relative;
+    top: -94px;
+    width: 265px;
+    height: 265px;
+    .disc {
+        height: 100%;
+        width: 100%;
+        background-image: url(../images/icons/play_disc.png);
+        background-size: 100%;
+        img{
+            width: 100%;
+            padding: 43px;
+            border-radius: 50%;
+        }
+    }
+}
+.start-rotate{
+    -webkit-animation-name: rotate;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: rotate;
+    animation-name: rotate;
+    -webkit-animation-duration: 5s;
+    animation-duration: 15s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+@keyframes rotate
+{
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+.song-name{
+    font-size: 20px;
+    margin-top: 17px;
+    color: #333;
+}
+.song-info{
+    a{
+        color: #428bca;
+    }
+    span{
+        margin-right:20px;
+    }
+}
+/*歌词*/
+#lrc{
+    height: 400px;
+    overflow-y: scroll;
+    ul{
+        list-style:none;
+        padding:0px;
+        li{
+            line-height:25px;
+        }
+    }
 }

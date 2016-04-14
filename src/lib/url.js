@@ -7,7 +7,8 @@ define(function (require, exports, module) {
         u_signin: common_url+"/sign_in",
         u_logout: common_url+"/logout",
         u_search:common_url+"/search",
-        u_song:common_url+"/song"
+        u_song:common_url+"/song",
+        u_lyric:common_url+"/lyric"
     };
     //下面是组件的url
     var m_URL = {
@@ -15,7 +16,8 @@ define(function (require, exports, module) {
         search_res: "./views/search_res.html",
         error: "./views/error.html",
         login:"./views/login.html",
-        sign_in:"./views/sign_in.html"
+        sign_in:"./views/sign_in.html",
+        song:"./views/song.html"
     };
     exports.get = function (name) {
         if (URL[name]) {

@@ -71,7 +71,7 @@
                         loginInfo.email = "";
                     }
                     loginInfo.pwd = this.pwd;
-                    console.log(loginInfo);
+
                     $.ajax({
                         url: url.get('u_login'),
                         type: "GET",
@@ -83,12 +83,7 @@
                                 closeDialog();
                                 $("#id-btns").hide();
                                 $("#user-info").show();
-                                var userInfo = new Vue({
-                                    el: "#user-info",
-                                    data: {
-                                        nick_name: res.data_set.nick_name
-                                    }
-                                });
+                                $('#nick-name-content').html(res.data_set.nick_name);
                             }
                             //登录失败
                             else if (res.status === '0') {

@@ -249,10 +249,10 @@
 			var self = this;
 
 			// Wrap the <li> contents in a <div>
-			var listItem = "<li><div>";
+			var listItem = "<li data-id='" + media.id + "'><div>";
 
 			// Create remove control
-			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "'>&times;</a>";
+			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.removeItemClass + "' data-id='" + media.id + "'>&times;</a>";
 
 			// Create links to free media
 			if(media.free) {
@@ -272,7 +272,7 @@
 			}
 
 			// The title is given next in the HTML otherwise the float:right on the free media corrupts in IE6/7
-			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='0'>" + media.title + (media.artist ? " <span class='jp-artist'>by " + media.artist + "</span>" : "") + "</a>";
+			listItem += "<a href='javascript:;' class='" + this.options.playlistOptions.itemClass + "' tabindex='0'>" + media.title + (media.artist ? " <span class='jp-artist' data-id='" + media.id + "'>by " + media.artist + "</span>" : "") + "</a>";
 			listItem += "</div></li>";
 
 			return listItem;
@@ -353,6 +353,23 @@
 				}
 			}
 		},
+		removeItem: function (song_id) {
+			var p_l = this.getList('play_list');
+			if (p_l) {
+				//检查列表中是否有该项目
+				var new_list = [];
+				p_l.map(function (item) {
+					if (item.song_id != song_id) {
+						new_list.push(item);
+					}
+				});
+				//重新渲染列表
+				localStorage.clear();
+				localStorage.setItem('play_list', JSON.stringify({
+					list: new_list
+				}));
+			}
+		},
 		remove: function(index) {
 			var self = this;
 
@@ -373,6 +390,8 @@
 
 						$(this.cssSelector.playlist + " li:nth-child(" + (index + 1) + ")").slideUp(this.options.playlistOptions.removeTime, function() {
 							$(this).remove();
+							var id = $(this).attr('data-id');
+							self.removeItem(id);
 
 							if(self.shuffled) {
 								var item = self.playlist[index];
@@ -414,6 +433,10 @@
 			if(0 <= index && index < this.playlist.length) {
 				this.current = index;
 				this._highlight(index);
+				$("#jp-name").html(this.playlist[index].title);
+				$('#jp-singer').html(this.playlist[index].artist);
+				$('#jp-img').attr('src',this.playlist[index].singer_pic);
+				console.log('playlist',this.playlist);
 				$(this.cssSelector.jPlayer).jPlayer("setMedia", this.playlist[this.current]);
 			} else {
 				this.current = 0;

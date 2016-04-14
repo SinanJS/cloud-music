@@ -1,0 +1,85 @@
+<div class="container" style="width: 990px;">
+    <div class="row">
+        <div class="col-md-6 col-sm-6">
+            <div class="needle">
+                <img src="images/icons/play_needle.png" alt="">
+            </div>
+            <div class="disc-box">
+                <div class="disc">
+                    <img class="start-rotate" id="album-cover" src="" alt="">
+                </div>
+            </div>
+            <div class="btns">
+                <button id="song-play">播放</button>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6">
+            <div class="row">
+                    <p class="song-name"></p>
+                    <p class="song-info">
+                        <span>歌手：<a href="#" class="song-singer"></a></span>
+                        <span>专辑：<a href="#" class="song-album"></a></span>
+                    </p>
+            </div>
+            <div class="row" id="lrc">
+                <ul>
+                    <li v-for="i in rows" v-text="i"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
+        var song={
+            getSong:function(){
+                var song_id=xhr.getSearch(location.hash).id;
+                $.ajax({
+                    url:url.get('u_song'),
+                    type:"GET",
+                    data:{
+                        id:song_id,
+                        ids:"["+song_id+"]"
+                    },
+                    success:function(res){
+                        var song=res.songs[0];
+                        console.log("song",song);
+                        $(".song-name").html(song.name);
+                        $("#album-cover").attr('src',song.album.picUrl);
+                        $('.song-singer').html(song.artists[0].name);
+                        $('.song-album').html(song.album.name);
+                        $('#song-play').attr('data-mp3Url',song.mp3Url);
+                    }
+                });
+            },
+            getLyric: function () {
+                $.ajax({
+                    url:url.get('u_lyric'),
+                    type:"GET",
+                    data:{
+                        "os":"pc",
+                        "id":xhr.getSearch(location.hash).id,
+                        "lv":-1,
+                        "tv":-1,
+                        "kv":-1
+                    },
+                    success:function(res){
+                        //如果存在歌词
+                        if(!res.nolyric){
+                            var lrc=res.lrc.lyric;
+                            var rows=lrc.split(/\[\d*:\d*\.\d*\]/g);
+                            var v_lrc=new Vue({
+                                el:"#lrc",
+                                data:{
+                                    rows:rows
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+        };
+        song.getSong();
+        song.getLyric();
+    });
+</script>

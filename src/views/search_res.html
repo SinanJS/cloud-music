@@ -15,7 +15,7 @@
                     <div class="row single-song-row" v-for="i in songs" v-if="i.audition.name">
                         <div class="col-md-5 col-sm-5">
                             <i class="fa fa-play-circle play-icon" data-songId="{{i.id}}"></i>
-                            {{i.audition.name}}
+                            <a href="javascript:void(0)" onclick="location.hash='#/song?id={{i.id}}'">{{i.audition.name}}</a>
                         </div>
                         <div class="col-md-2 col-sm-2">{{i.artists[0].name}}</div>
                         <div class="col-md-3 col-sm-3 album-name">《{{i.album.name}}》</div>
@@ -69,13 +69,11 @@
             query.type=xhr.getSearch(location.hash).type;
             query.limit=50;
             query.offset=0;
-            console.log(query);
             $.ajax({
                 url:url.get('u_search')+"?s="+query.s+"&type="+query.type+"&limit="+query.limit+"&offset="+query.offset,
                 type:"GET",
                 //data:query,
                 success:function(res){
-                    console.log(res);
                     callback(res.result);
                 },
                 error:function(e){
@@ -105,12 +103,11 @@
                         ids:"["+song_id+"]"
                     },
                     success:function(res){
-                        console.log(res);
                         var song=res.songs[0];
                         var item = {
                             "song_id": song_id,
                             'singer_name': song.artists[0].name,
-                            'singer_pic': song.artists[0].img1v1Url,
+                            'singer_pic': song.album.picUrl,
                             'song_name':song.name,
                             "duration": msTomin(song.audition.playTime),
                             "suffix": "mp3",
@@ -118,8 +115,9 @@
                             "type": 0
                         };
                         var flag=pl.addItem(item);
-                        console.log(flag);
                        if(flag){
+                           var listLen=$('#playlist li').length;
+                           $("#list-length").html(listLen);
                            myPlaylist.playlist.map(function(val,index){
                                if(val.id===song_id){
                                    myPlaylist.play(index);
@@ -144,7 +142,6 @@
                     type:"GET",
                     //data:query,
                     success:function(res){
-                        console.log(res);
                         callback(res.result);
                     },
                     error:function(e){

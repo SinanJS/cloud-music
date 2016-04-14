@@ -10,7 +10,8 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     var routes = {
         '/home': list('home'),
         '/search_res': list('search_res'),
-        '/error': list('error')
+        '/error': list('error'),
+        '/song':list('song')
     };
     if (!location.hash) {
         location.hash = '#/home';

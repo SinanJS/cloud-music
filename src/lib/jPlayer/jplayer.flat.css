@@ -130,8 +130,8 @@ a.hid{
 
 .jp-playlist.open ul{
 	display: block !important;
-	bottom: 60px;
-	left: 180px;
+	bottom: -2px;
+	left: 308px;
 }
 
 .jp-playlist li{

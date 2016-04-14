@@ -16,6 +16,7 @@ define(function (require, exports, module) {
                     title: i.song_name,
                     artist: i.singer_name,
                     mp3: i.url,
+                    singer_pic: i.singer_pic,
                     poster: "images/m0.jpg"
                 };
                 window.myPlaylist.add(item);
@@ -60,15 +61,16 @@ define(function (require, exports, module) {
         if (p_l) {
             //检查是否之前已经添加过
             if (this.checkOverlap(p_l, item.song_id)) {
-                p_l.push(item);
 
                 var i = {
                     id: item.song_id,
                     title: item.song_name,
                     artist: item.singer_name,
                     mp3: item.url,
+                    singer_pic:item.singer_pic,
                     poster: "images/m0.jpg"
                 };
+                p_l.push(item);
                 window.myPlaylist.add(i);
                 //window.myPlaylist.playlist.push(i);
                 // this.addDom(item.song_name, item.singer_name);

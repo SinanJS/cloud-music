@@ -12,7 +12,8 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
             "?([\s\S]*)": function(a){d.getDom('home');console.log(a)}
         } ,
         '/search_res': list('search_res'),
-        '/error': list('error')
+        '/error': list('error'),
+        '/song':list('song')
     };
     if (!location.hash) {
         location.hash = '#/home';
@@ -50,14 +51,10 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
             if(!!u_t){
                 $('#id-btns').hide();
                 $("#user-info").show();
-                var userInfo=new Vue({
-                    el:"#user-info",
-                    data:{
-                        nick_name:u_t.nick_name
-                    }
-                });
-
+                $('#nick-name-content').html(u_t.nick_name);
             }
+            var listLen=$('#playlist li').length;
+            $("#list-length").html(listLen);
             return u_t;
         },
         //注销
@@ -128,5 +125,6 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     $('#search-input').keypress(function(e){
        tmplCtrl.search(e);
     });
+
 
 });
