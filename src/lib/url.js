@@ -8,7 +8,8 @@ define(function (require, exports, module) {
         u_logout: common_url+"/logout",
         u_search:common_url+"/search",
         u_song:common_url+"/song",
-        u_lyric:common_url+"/lyric"
+        u_lyric:common_url+"/lyric",
+        u_artist:common_url+"/artist"
     };
     //下面是组件的url
     var m_URL = {
@@ -17,7 +18,8 @@ define(function (require, exports, module) {
         error: "./views/error.html",
         login:"./views/login.html",
         sign_in:"./views/sign_in.html",
-        song:"./views/song.html"
+        song:"./views/song.html",
+        artist:"./views/artist.html"
     };
     exports.get = function (name) {
         if (URL[name]) {

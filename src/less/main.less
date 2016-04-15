@@ -44,6 +44,11 @@
 .single-song-row {
     height: 35px;
     line-height: 35px;
+    div{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 .single-song-row:nth-child(2n){
     background-color: #f7f7f7;
@@ -122,9 +127,15 @@
         transform-origin: 13px 13px 0px;
         top: -11px;
         position: relative;
+        transition-property: transform;
+        transition-duration: 0.3s;
         left: 106px;
         z-index: 9;
     }
+}
+//唱针滑动
+.needle-move{
+    transform: rotate(-14deg) !important;
 }
 .disc-box{
     position: relative;
@@ -156,6 +167,7 @@
     animation-timing-function: linear;
     -webkit-animation-iteration-count: infinite;
     animation-iteration-count: infinite;
+    animation-fill-mode:forwards;
 }
 @keyframes rotate
 {
@@ -181,6 +193,7 @@
         margin-right:20px;
     }
 }
+
 /*歌词*/
 #lrc{
     height: 400px;
@@ -192,4 +205,9 @@
             line-height:25px;
         }
     }
+}
+#jp-singer,#jp-name{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

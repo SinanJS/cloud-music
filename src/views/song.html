@@ -2,11 +2,11 @@
     <div class="row">
         <div class="col-md-6 col-sm-6">
             <div class="needle">
-                <img src="images/icons/play_needle.png" alt="">
+                <img id='needle-img' src="images/icons/play_needle.png" alt="">
             </div>
             <div class="disc-box">
-                <div class="disc">
-                    <img class="start-rotate" id="album-cover" src="" alt="">
+                <div class="disc" style="transform:rotate(0deg);">
+                    <img id="album-cover" src="" alt="">
                 </div>
             </div>
             <div class="btns">
@@ -32,6 +32,16 @@
 <script>
     seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
         var song={
+
+            discCover:function(){
+                clearInterval(intervalId);
+                if(!window.audioPlayer.paused){
+                    intervalId=this.rotate();
+                    $('#needle-img').addClass('needle-move');
+                }else {
+                    $('#needle-img').removeClass('needle-move');
+                }
+            },
             getSong:function(){
                 var song_id=xhr.getSearch(location.hash).id;
                 $.ajax({
@@ -43,7 +53,6 @@
                     },
                     success:function(res){
                         var song=res.songs[0];
-                        console.log("song",song);
                         $(".song-name").html(song.name);
                         $("#album-cover").attr('src',song.album.picUrl);
                         $('.song-singer').html(song.artists[0].name);
@@ -77,9 +86,32 @@
                         }
                     }
                 })
+            },
+            rotate:function(){
+                var str=document.getElementsByClassName('disc')[0].style.transform;
+                var reg=/\d+/;
+                var g=parseInt(str.match(reg)[0]);
+                var r=setInterval(function(){
+                    if(g<360){
+                        g++;
+                    }else if(g===360) {
+                        g=0;
+                    }
+                    $('.disc').css('transform',"rotate("+g+"deg)");
+                },40);
+                return r;
+            },
+
+            events:function(){
+                $('.jp-pause,.jp-play,.jp-next,.jp-previous').unbind().bind('click',function(){
+                    song.discCover();
+                });
             }
         };
+        //如果正在播放
+        song.discCover();
         song.getSong();
         song.getLyric();
+        song.events();
     });
 </script>

@@ -14,10 +14,13 @@
 
                     <div class="row single-song-row" v-for="i in songs" v-if="i.audition.name">
                         <div class="col-md-5 col-sm-5">
-                            <i class="fa fa-play-circle play-icon" data-songId="{{i.id}}"></i>
-                            <a href="javascript:void(0)" onclick="location.hash='#/song?id={{i.id}}'">{{i.audition.name}}</a>
+
+                            <a href="javascript:void(0)" class='title-a' data-songId="{{i.id}}">
+                                <i class="fa fa-play-circle play-icon" data-songId="{{i.id}}"></i>
+                                {{i.audition.name}}
+                            </a>
                         </div>
-                        <div class="col-md-2 col-sm-2">{{i.artists[0].name}}</div>
+                        <div class="col-md-2 col-sm-2" data-singerId="i.artists[0].id">{{i.artists[0].name}}</div>
                         <div class="col-md-3 col-sm-3 album-name">《{{i.album.name}}》</div>
                         <div class="col-md-2 col-sm-2">{{i.bMusic.playTime | msToMin}}</div>
                     </div>
@@ -90,6 +93,44 @@
                     songs:res.songs,
                     songCount:res.songCount
                 }
+            });
+            $('.title-a').bind('click',function(){
+                $('.title-a').css('color','#788188');
+                $(this).css('color','#F05050');
+                var song_id=$(this).attr('data-songId');
+                $.ajax({
+                    url:url.get('u_song'),
+                    type:"GET",
+                    data:{
+                        id:song_id,
+                        ids:"["+song_id+"]"
+                    },
+                    success:function(res){
+                        var song=res.songs[0];
+                        var item = {
+                            "song_id": song_id,
+                            'singer_name': song.artists[0].name,
+                            'singer_pic': song.album.picUrl,
+                            'song_name':song.name,
+                            "duration": msTomin(song.audition.playTime),
+                            "suffix": "mp3",
+                            "url": song.mp3Url,
+                            "type": 0,
+                            "singer_id":song.artists[0].id
+                        };
+                        var flag=pl.addItem(item);
+//                        if(flag){
+                            var listLen=$('#playlist li').length;
+                            $("#list-length").html(listLen);
+                            myPlaylist.playlist.map(function(val,index){
+                                if(val.id===song_id){
+                                    myPlaylist.play(index);
+                                }
+                            });
+//                        };
+                        //location.hash='#/song?id='+song_id;
+                    }
+                });
             });
             $('.play-icon').bind('click',function(){
                 $('.play-icon').css('color','#788188');

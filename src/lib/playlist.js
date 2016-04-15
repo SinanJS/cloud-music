@@ -17,7 +17,8 @@ define(function (require, exports, module) {
                     artist: i.singer_name,
                     mp3: i.url,
                     singer_pic: i.singer_pic,
-                    poster: "images/m0.jpg"
+                    poster: "images/m0.jpg",
+                    singer_id: i.singer_id
                 };
                 window.myPlaylist.add(item);
             });
@@ -61,14 +62,14 @@ define(function (require, exports, module) {
         if (p_l) {
             //检查是否之前已经添加过
             if (this.checkOverlap(p_l, item.song_id)) {
-
                 var i = {
                     id: item.song_id,
                     title: item.song_name,
                     artist: item.singer_name,
                     mp3: item.url,
                     singer_pic:item.singer_pic,
-                    poster: "images/m0.jpg"
+                    poster: "images/m0.jpg",
+                    singer_id:item.singer_id
                 };
                 p_l.push(item);
                 window.myPlaylist.add(i);
@@ -79,7 +80,7 @@ define(function (require, exports, module) {
                 }));
                 return true;
             } else {
-                alert('已经添加过了');
+                //alert('已经添加过了');
                 return false;
             }
 

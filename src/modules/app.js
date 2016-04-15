@@ -13,13 +13,16 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
         } ,
         '/search_res': list('search_res'),
         '/error': list('error'),
-        '/song':list('song')
+        '/song':list('song'),
+        '/artist':list('artist')
     };
     if (!location.hash) {
         location.hash = '#/home';
     }
 
     $(window).bind('hashchange', function () {
+      /*  window.clearInterval(intervalId);
+         console.log('清除',window.intervalId);*/
         var r=location.hash.split("?")[0];
         if (!location.hash) {
             location.hash = '#/home';
@@ -127,4 +130,14 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     });
 
 
+    $('#jp-name').bind('click',function(){
+        var song_id=$(this).attr('data-id');
+        location.hash='#/song?id='+song_id;
+    });
+
+    $('#jp-singer').bind('click',function(){
+        var singer_id=$(this).attr('data-singerId');
+        location.hash='#/artist?id='+singer_id;
+    });
+    window.intervalId=0;
 });

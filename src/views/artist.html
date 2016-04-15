@@ -1,0 +1,26 @@
+<script>
+    seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
+        var Artist=function(){
+
+        };
+        Artist.prototype.getDetail=function(){
+            var artistId=xhr.getSearch(location.hash).id;
+            $.ajax({
+                url:url.get('u_artist'),
+                type:"GET",
+                data:{
+                    id:artistId,
+                    limit:200
+                },
+                success:function(res){
+                    console.log("artist",res);
+                }
+            });
+        };
+
+
+        //执行
+        var artist=new Artist();
+        artist.getDetail();
+    });
+</script>

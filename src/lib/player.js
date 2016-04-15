@@ -68,7 +68,7 @@ define(function (require, exports, module) {
             if (this.checkOverlap(p_l.list, item.song_id)) {
                 p_l.list.push(item);
             } else {
-                alert('已经添加过了');
+                //alert('已经添加过了');
             }
 
         } else {
