@@ -14,7 +14,8 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
         '/search_res': list('search_res'),
         '/error': list('error'),
         '/song':list('song'),
-        '/artist':list('artist')
+        '/artist':list('artist'),
+        '/chat':list('chat')
     };
     if (!location.hash) {
         location.hash = '#/home';
