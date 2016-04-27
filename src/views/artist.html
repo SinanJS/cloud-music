@@ -21,17 +21,73 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-7" style="min-height: 304px;border-left: 1px solid #948188;border-right: 1px solid #948188;"></div>
+        <div class="col-md-7" style="min-height: 304px;">
+            <div class="detail-singer">
+                <b class="tab-singer">歌手</b>
+                <span class="singer-name" v-text="artist.name"> </span>
+                <ul class="singer-ul">
+                    <li><span>单曲数：</span><span v-text="artist.musicSize"></span></li>
+                    <li><span>专辑数：</span><span v-text="artist.albumSize"></span></li>
+                </ul>
+                <div class="singer-intro" id="singer-intro">
+                    <div class="section" v-if="briefDesc">
+                        <p class="sm-title">
+                            <b class="tab-title"></b>
+                            <span v-text="briefDesc"></span>
+                        </p>
+                    </div>
+                    <div class="no-intro" v-else>
+                        <i class="icon-earphones"></i>暂无介绍
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <section class="panel panel-default">
+            <header class="panel-heading bg-light">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active"><a href="#panel-album" data-toggle="tab">专辑</a></li>
+                    <li class=""><a href="#panel-intro" data-toggle="tab">歌手介绍</a></li>
+
+                </ul>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel-album">
+                        <div class="album" onclick="window.location='#/album?id={{i.id}}'" v-for="i in hotAlbums">
+                            <div class="album-bg">
+                                <img src="{{i.picUrl}}" alt="">
+                            </div>
+                            <p class="album-name-panel" v-text="i.name"></p>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="panel-intro">
+                        <div v-for="i in intro">
+                            <p class="title"  v-show="i.ti!=''">
+                                <b class="symbol"></b>
+                                <span class="title-txt" v-text="i.ti"></span>
+                            </p>
+                            <p class='content' v-text="i.txt">
+
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
 </div>
 
 <script>
     seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
         var Artist=function(){
-
+            this.artistId=xhr.getSearch(location.hash).id;
         };
         Artist.prototype.getDetail=function(){
-            var artistId=xhr.getSearch(location.hash).id;
+            var artistId=this.artistId;
             $.ajax({
                 url:url.get('u_artist'),
                 type:"GET",
@@ -42,8 +98,39 @@
                 success:function(res){
                     var v_artist=new Vue({
                         el:"#artist-detail",
-                        data:res
+                        data:res,
                     });
+                    var panel=new Vue({
+                        el:"#panel-album",
+                        data:res
+                    })
+                }
+            });
+        };
+        Artist.prototype.getIntro=function(){
+            var artistId=this.artistId;
+            $.ajax({
+                url:url.get('u_intro'),
+                type:'GET',
+                data:{
+                    id:artistId
+                },
+                success:function(res){
+                    console.log(res);
+                    var intro=new Vue({
+                        el:"#singer-intro",
+                        data:{
+                            briefDesc:res.briefDesc,
+                            intro:res.introduction
+                        }
+                    });
+                    var panelIntro=new Vue({
+                        el:"#panel-intro",
+                        data:{
+                            briefDesc:res.briefDesc,
+                            intro:res.introduction
+                        }
+                    })
                 }
             });
         };
@@ -52,5 +139,6 @@
         //执行
         var artist=new Artist();
         artist.getDetail();
+        artist.getIntro();
     });
 </script>

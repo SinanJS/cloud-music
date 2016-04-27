@@ -10,6 +10,7 @@ define(function (require, exports, module) {
         u_song:common_url+"/song",
         u_lyric:common_url+"/lyric",
         u_artist:common_url+"/artist",
+        u_intro:common_url+"/intro"
 
     };
     //下面是组件的url
