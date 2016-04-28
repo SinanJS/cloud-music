@@ -1,0 +1,224 @@
+<div class="container" id="album-detail" style="width: 990px" data-albumid="{{id}}">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="album" style="width: 100%;margin-top: 25px;margin-bottom: 25px;">
+                <div class="album-bg-big">
+                    <img class='cover' src="{{picUrl}}" alt="">
+                    <img class="bg" src="images/icons/blk_detail_cover_alb.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7" style="min-height: 304px;">
+            <div class="detail-singer">
+                <b class="tab-singer">专辑</b>
+                <span class="singer-name" v-text="name"> </span>
+                <ul class="singer-ul">
+                    <li><span>歌手：</span><span class='singer' v-text="artists[0].name" data-id="{{artists[0].id}}" onclick="location.hash='#/artist?id={{artists[0].id}}'"></span></li>
+                    <li><span>发行时间：</span><span v-text="publishTime | msToDateOnly"></span></li>
+                    <li v-if="company"><span>发行公司：</span><span v-text='company'></span></li>
+                </ul>
+                <div class="singer-intro" id="singer-intro">
+                    <div class="section" v-if="description">
+                        <p class="sm-title">
+                            <b class="tab-title"></b>
+                            <span v-text="description"></span>
+                        </p>
+                    </div>
+                    <div class="no-intro" v-else>
+                        <i class="icon-earphones"></i>暂无介绍
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <section class="panel panel-default">
+            <header class="panel-heading bg-light">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active"><a href="#panel-song" data-toggle="tab">歌曲列表</a></li>
+                    <li class=""><a href="#panel-intro" data-toggle="tab">歌手介绍</a></li>
+
+                </ul>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel-song">
+                        <div class="tab-pane active" id="single-song-panel">
+
+                                <div class="row single-song-row" v-for="i in songs" v-if="i.name">
+                                    <div class="col-md-5 col-sm-5">
+
+                                        <a href="javascript:void(0)" class='title-a' data-songId="{{i.id}}">
+                                            <i class="fa fa-play-circle play-icon" data-songId="{{i.id}}"></i>
+                                            {{i.name}}
+                                        </a>
+                                    </div>
+                                    <div class="col-md-2 col-sm-2" data-singerId="i.artists[0].id">{{i.artists[0].name}}</div>
+                                    <div class="col-md-3 col-sm-3 album-name">《{{i.album.name}}》</div>
+                                    <div class="col-md-2 col-sm-2">{{i.bMusic.playTime | msToMin}}</div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="panel-intro">
+                        <div v-for="i in intro">
+                            <p class="title">
+                                <b class="symbol"></b>
+                                <span class="title-txt" v-text="i.ti"></span>
+                            </p>
+                            <p class='content' v-text="i.txt">
+
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
+        filter.msToMin();
+        filter.msToDateOnly();
+        var Album = function(){
+           this.albumId=xhr.getSearch(window.location.hash).id;
+        };
+        //转化成正常时间字符串
+        function msTomin(val){
+            var time=new Date(val);
+            var min=time.getMinutes();
+            var s=time.getSeconds();
+            if(min<10){
+                min="0"+min.toString();
+            }
+            if(s<10){
+                s= "0"+ s.toString();
+            }
+            return min.toString()+":"+ s.toString();
+        }
+        Album.prototype.getDetail=function(callback){
+            var albumId=this.albumId;
+
+//            37290?ext=true&id=37290&offset=0&total=true&limit=10
+            $.ajax({
+                url:url.get('u_album'),
+                type:"GET",
+                data:{
+                    id:albumId,
+                    ext:true,
+                    offset:0,
+                    total:true,
+                    limit:100
+                },
+                success:function(res){
+                    console.log(res);
+                    $.ajax({
+                        url:url.get('u_intro'),
+                        type:'GET',
+                        data:{
+                            id:res.album.artists[0].id
+                        },
+                        success:function(result){
+                            res.album.intro=result.introduction;
+                            console.log(res.album)
+                            var vue_album=new Vue({
+                                el:"#album-detail",
+                                data:res.album
+                            });
+
+                            callback(res);
+                        }
+                    });
+                }
+            });
+        };
+        Album.prototype.singleSongList=function(res){
+            var v_search=new Vue({
+                el:"#single-song-panel",
+                data:{
+                    songs:res.songs,
+                    songCount:res.songCount
+                }
+            });
+            $('.title-a').bind('click',function(){
+                $('.title-a').css('color','#788188');
+                $(this).css('color','#F05050');
+                var song_id=$(this).attr('data-songId');
+                $.ajax({
+                    url:url.get('u_song'),
+                    type:"GET",
+                    data:{
+                        id:song_id,
+                        ids:"["+song_id+"]"
+                    },
+                    success:function(res){
+                        var song=res.songs[0];
+                        var item = {
+                            "song_id": song_id,
+                            'singer_name': song.artists[0].name,
+                            'singer_pic': song.album.picUrl,
+                            'song_name':song.name,
+                            "duration": msTomin(song.audition.playTime),
+                            "suffix": "mp3",
+                            "url": song.mp3Url,
+                            "type": 0,
+                            "singer_id":song.artists[0].id
+                        };
+                        var flag=pl.addItem(item);
+                        var listLen=$('#playlist li').length;
+                        $("#list-length").html(listLen);
+                        myPlaylist.playlist.map(function(val,index){
+                            if(val.id===song_id){
+                                myPlaylist.play(index);
+                            }
+                        });
+                    }
+                });
+            });
+            $('.play-icon').bind('click',function(){
+                $('.play-icon').css('color','#788188');
+                $(this).css('color','#F05050');
+                var song_id=$(this).attr('data-songId');
+                $.ajax({
+                    url:url.get('u_song'),
+                    type:"GET",
+                    data:{
+                        id:song_id,
+                        ids:"["+song_id+"]"
+                    },
+                    success:function(res){
+                        var song=res.songs[0];
+                        var item = {
+                            "song_id": song_id,
+                            'singer_name': song.artists[0].name,
+                            'singer_pic': song.album.picUrl,
+                            'song_name':song.name,
+                            "duration": msTomin(song.audition.playTime),
+                            "suffix": "mp3",
+                            "url": song.mp3Url,
+                            "type": 0
+                        };
+                        var flag=pl.addItem(item);
+                        if(flag){
+                            var listLen=$('#playlist li').length;
+                            $("#list-length").html(listLen);
+                            myPlaylist.playlist.map(function(val,index){
+                                if(val.id===song_id){
+                                    myPlaylist.play(index);
+                                }
+                            });
+                        };
+
+                    }
+                });
+            });
+        };
+
+        var album=new Album();
+        album.getDetail(album.singleSongList);
+
+    });
+
+</script>

@@ -10,7 +10,8 @@ define(function (require, exports, module) {
         u_song:common_url+"/song",
         u_lyric:common_url+"/lyric",
         u_artist:common_url+"/artist",
-        u_intro:common_url+"/intro"
+        u_intro:common_url+"/intro",
+        u_album:common_url+"/album"
 
     };
     //下面是组件的url
@@ -22,7 +23,8 @@ define(function (require, exports, module) {
         sign_in:"./views/sign_in.html",
         song:"./views/song.html",
         artist:"./views/artist.html",
-        chat:"./views/chat.html"
+        chat:"./views/chat.html",
+        album:"./views/album.html"
     };
     exports.get = function (name) {
         if (URL[name]) {

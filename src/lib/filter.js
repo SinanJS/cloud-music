@@ -27,6 +27,16 @@ define(function (require, exports, module) {
                 return dateTime;
             });
         },
+        msToDateOnly:function(){
+            Vue.filter('msToDateOnly', function (val) {
+                var date = new Date(parseInt(val));
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                var d = date.getDate();
+                var dateTime = y + '-' + m + '-' + d ;
+                return dateTime;
+            });
+        },
         msToMin:function(){
             Vue.filter('msToMin', function (val) {
                 var time=new Date(val);
@@ -41,6 +51,7 @@ define(function (require, exports, module) {
                 return min.toString()+":"+ s.toString();
             });
         }
+
     };
     module.exports = Filter;
 });
