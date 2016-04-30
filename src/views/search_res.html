@@ -11,39 +11,85 @@
         <div class="tab-content">
             <div class="tab-pane active" id="single-song-panel">
                 <div class="container">
-
-                    <div class="row single-song-row" v-for="i in songs" v-if="i.audition.name">
-                        <div class="col-md-5 col-sm-5">
+                    <div class="loading-icon" id="loading-song">
+                        <span class="pulse-loader">Loading…</span>
+                        <p class="loading-txt">玩儿命加载中...</p>
+                    </div>
+                    <div class="row title-row">
+                        <div class="col-md-3 col-sm-3">
+                            歌名
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            操作
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            歌手
+                        </div>
+                        <div class="col-md-3 col-sm-3">
+                            专辑
+                        </div>
+                        <div class="col-md-2 col-sm-2">
+                            时长
+                        </div>
+                    </div>
+                    <div class="row single-song-row" style="display: none;" v-for="i in songs" v-if="i.audition.name">
+                        <div class="col-md-3 col-sm-3">
 
                             <a href="javascript:void(0)" class='title-a' data-songId="{{i.id}}">
-                                <i class="fa fa-play-circle play-icon" data-songId="{{i.id}}"></i>
-                                {{i.audition.name}}
+                                <i class="fa fa-play-circle-o play-icon" data-songId="{{i.id}}"></i>
+                                <span v-text="i.audition.name"></span>
                             </a>
                         </div>
-                        <div class="col-md-2 col-sm-2" data-singerId="i.artists[0].id">{{i.artists[0].name}}</div>
-                        <div class="col-md-3 col-sm-3 album-name">《{{i.album.name}}》</div>
-                        <div class="col-md-2 col-sm-2">{{i.bMusic.playTime | msToMin}}</div>
+                        <div class="col-md-2 col-sm-2">
+                            <i class="fa  fa-plus-square-o"  data-songId="{{i.id}}"></i>
+                            &nbsp;
+                            <i class="fa fa-folder-o"  data-songId="{{i.id}}"></i>
+                        </div>
+                        <div class="col-md-2 col-sm-2" data-singerId="i.artists[0].id">
+                            <a v-text="i.artists[0].name" href="javascript:void(0)"  onclick="window.location.hash='#/artist?id={{i.artists[0].id}}'"></a>
+                        </div>
+                        <div class="col-md-3 col-sm-3 album-name">
+                            <a v-text="i.album.name" href="javascript:void(0)"  onclick="window.location.hash='#/album?id={{i.album.id}}'"></a>
+                        </div>
+                        <div class="col-md-2 col-sm-2" v-text="i.bMusic.playTime | msToMin"></div>
                     </div>
                 </div>
             </div>
             <div class="tab-pane" id="singer-panel">
-                <p style="padding-left: 50px;">找到<span style="color:#F41616;" v-text="count"></span>位歌手</p>
-                <ul>
-                    <li class="singer-li" v-for="i in artists">
-                        <div class="u-cover u-cover-5 singer-bg">
-                            <a href="/artist?id={{i.id}}">
-                                <img :src="i.img1v1Url">
-                                <span title="{{i.name}}" class="msk"></span>
-                            </a>
-                        </div>
-                        <p class="singer-name">
-                            <a class="nm f-thide s-fc0" href="/artist?id={{i.id}}" title="{{i.name}}" v-text="i.name"></a>
-                            <span v-text="'('+i.trans+')'" v-show="i.trans"></span>
-                        </p>
-                    </li>
-                </ul>
+                <div class="loading-icon" id="loading-singer">
+                    <span class="pulse-loader">Loading…</span>
+                    <p class="loading-txt">玩儿命加载中...</p>
+                </div>
+                <div id="singer-show">
+                    <p style="padding-left: 50px;">找到<span style="color:#F41616;" v-text="count"></span>位歌手</p>
+                    <ul>
+                        <li class="singer-li" v-for="i in artists">
+                            <div class="u-cover u-cover-5 singer-bg">
+                                <a href="/artist?id={{i.id}}">
+                                    <img :src="i.img1v1Url">
+                                    <span title="{{i.name}}" class="msk"></span>
+                                </a>
+                            </div>
+                            <p class="singer-name">
+                                <a class="nm f-thide s-fc0" href="/artist?id={{i.id}}" title="{{i.name}}" v-text="i.name"></a>
+                                <span v-text="'('+i.trans+')'" v-show="i.trans"></span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="tab-pane" id="album-panel">message</div>
+            <div class="tab-pane" id="album-panel">
+                <div class="loading-icon" id="loading-album">
+                    <span class="pulse-loader">Loading…</span>
+                    <p class="loading-txt">玩儿命加载中...</p>
+                </div>
+                <div class="album" style="display: none;" onclick="window.location='#/album?id={{i.id}}'" v-for="i in albums">
+                    <div class="album-bg">
+                        <img src="{{i.picUrl}}"  alt="">
+                    </div>
+                    <p class="album-name-panel" v-text="i.name"></p>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -77,6 +123,8 @@
                 type:"GET",
                 //data:query,
                 success:function(res){
+                    $('#loading-song').hide();
+                    $('.single-song-row').show();
                     callback(res.result);
                 },
                 error:function(e){
@@ -183,6 +231,8 @@
                     type:"GET",
                     //data:query,
                     success:function(res){
+                        $('#loading-singer').hide();
+                        $('#singer-show').show();
                         callback(res.result);
                     },
                     error:function(e){
@@ -201,11 +251,36 @@
                 }
             });
         };
+        SearchRes.prototype.album=function(callback){
+            var query={};
+            query.s=xhr.getSearch(location.hash).s;
+            query.type=10;
+            query.limit=49;
+            query.offset=0;
+            $('#album-tab').bind('click',function(){
+                $.ajax({
+                    url:url.get('u_search')+"?s="+query.s+"&type="+query.type+"&limit="+query.limit+"&offset="+query.offset,
+                    type:"GET",
+                    //data:query,
+                    success:function(res){
+                        $('#loading-album').hide();
+                        $('.album').show();
+                        var vue_Album=new Vue({
+                            el:"#album-panel",
+                            data:res.result
+                        });
+                    },
+                    error:function(e){
+                        console.log(e);
+                    }
+                });
+            });
+        };
 
         var searchRes=new SearchRes();
         searchRes.singleSong(searchRes.singleSongList);
         searchRes.singer(searchRes.singerList);
-
+        searchRes.album();
     });
 
 
