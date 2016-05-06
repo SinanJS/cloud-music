@@ -309,4 +309,51 @@
   background: #f7f7f7 none repeat scroll 0% 0%;
   color: #303437;
 }
+.remind-box {
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+.remind-box .remind-bg {
+  height: 100%;
+  background: #5a6a7a none repeat scroll 0% 0%;
+  opacity: 0.7;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+.remind-box .remind-body {
+  position: relative;
+  top: -50px;
+  color: #fff;
+  padding: 0 20px;
+}
+#add-song-list-box #new-song-list {
+  height: 40px;
+}
+#add-song-list-box .new-song-list {
+  padding: 0px 10px;
+  height: 60px;
+  line-height: 45px;
+  border-bottom: 1px solid #EAEEF1;
+  cursor: pointer;
+}
+#add-song-list-box .song-list {
+  padding: 0px 10px;
+  height: 60px;
+  line-height: 45px;
+  border-bottom: 1px solid #EAEEF1;
+  cursor: pointer;
+}
+#add-song-list-box small {
+  display: block;
+  height: 20px;
+  line-height: 20px;
+  margin-top: -15px;
+  padding-left: 27px;
+  color: #7c858c;
+}
 /*# sourceMappingURL=main.css.map */

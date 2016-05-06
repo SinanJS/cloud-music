@@ -15,7 +15,7 @@
                         <span class="pulse-loader">Loading…</span>
                         <p class="loading-txt">玩儿命加载中...</p>
                     </div>
-                    <div class="row title-row">
+                    <div class="row title-row" style="display:none;">
                         <div class="col-md-3 col-sm-3">
                             歌名
                         </div>
@@ -36,14 +36,14 @@
                         <div class="col-md-3 col-sm-3">
 
                             <a href="javascript:void(0)" class='title-a' data-songId="{{i.id}}">
-                                <i class="fa fa-play-circle-o play-icon" data-songId="{{i.id}}"></i>
+                                <i class="fa fa-play-circle-o play-icon" title='播放' data-songId="{{i.id}}"></i>
                                 <span v-text="i.audition.name"></span>
                             </a>
                         </div>
                         <div class="col-md-2 col-sm-2">
-                            <i class="fa  fa-plus-square-o"  data-songId="{{i.id}}"></i>
+                            <i class="fa  fa-plus-square-o add-playlist" title="添加到播放列表" style="cursor: pointer;" data-songId="{{i.id}}"></i>
                             &nbsp;
-                            <i class="fa fa-folder-o"  data-songId="{{i.id}}"></i>
+                            <i class="fa fa-folder-o add-song-list" title="添加到歌单" style="cursor: pointer;" data-songId="{{i.id}}"></i>
                         </div>
                         <div class="col-md-2 col-sm-2" data-singerId="i.artists[0].id">
                             <a v-text="i.artists[0].name" href="javascript:void(0)"  onclick="window.location.hash='#/artist?id={{i.artists[0].id}}'"></a>
@@ -124,7 +124,7 @@
                 //data:query,
                 success:function(res){
                     $('#loading-song').hide();
-                    $('.single-song-row').show();
+                    $('.single-song-row,.title-row').show();
                     callback(res.result);
                 },
                 error:function(e){
@@ -180,6 +180,17 @@
                     }
                 });
             });
+            /*加入到歌单按钮*/
+            $('.add-song-list').bind('click',function(){
+                window.selected=$(this).attr('data-songId');
+                $.ajax({
+                    url:url.get('add_song_list'),
+                    type:"GET",
+                    success:function(res){
+                        $("body").append(res);
+                    }
+                });
+            });
             $('.play-icon').bind('click',function(){
                 $('.play-icon').css('color','#788188');
                 $(this).css('color','#F05050');
@@ -214,6 +225,42 @@
                            });
                        };
 
+                    }
+                });
+            });
+            $('.add-playlist').bind('click',function(){
+                $('.play-icon').css('color','#788188');
+                $(this).css('color','#F05050');
+                var song_id=$(this).attr('data-songId');
+                $.ajax({
+                    url:url.get('u_song'),
+                    type:"GET",
+                    data:{
+                        id:song_id,
+                        ids:"["+song_id+"]"
+                    },
+                    success:function(res){
+                        var song=res.songs[0];
+                        var item = {
+                            "song_id": song_id,
+                            'singer_name': song.artists[0].name,
+                            'singer_pic': song.album.picUrl,
+                            'song_name':song.name,
+                            "duration": msTomin(song.audition.playTime),
+                            "suffix": "mp3",
+                            "url": song.mp3Url,
+                            "type": 0
+                        };
+                        var flag=pl.addItem(item);
+
+                        if(flag){
+                            var listLen=$('#playlist li').length;
+                            $("#list-length").html(listLen);
+                            window.remind('成功添加到播放列表');
+                        }
+                        else {
+                            window.remind('已经添加过');
+                        }
                     }
                 });
             });

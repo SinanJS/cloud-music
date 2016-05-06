@@ -138,9 +138,6 @@
                     <section class="vbox">
                         <section class="w-f-md scrollable">
                             <div class="slim-scroll" data-height="auto" data-disable-fade-out="true" data-distance="0" data-size="10px" data-railOpacity="0.2">
-
-
-
                                 <!-- nav -->
                                 <nav class="nav-primary hidden-xs">
                                     <ul class="nav bg clearfix">
@@ -175,7 +172,7 @@
                                         </li>
 
                                         <li>
-                                            <a href="#" class="auto">
+                                            <a href="" class="auto">
                                                 <span class="pull-right text-muted">
                           <i class="fa fa-angle-left text"></i>
                           <i class="fa fa-angle-down text-active"></i>
@@ -340,9 +337,17 @@
             </section>
         </section>
         <audio id="player"></audio>
+        <div class="remind-box" style="display:none;">
+            <div class="remind-bg"></div>
+            <div class="remind-body">
+                <i id='remind-icon' class="icon-emoticon-smile"></i>
+                <span id="remind-content">这里是提示内容!</span>
+            </div>
+        </div>
         <script src="lib/jquery-1.11.3/jquery.js"></script>
         <!-- Bootstrap -->
         <script src="lib/bootstrap-3.3.5/bootstrap.js"></script>
+        <!--<script src="lib/global.js"></script>-->
         <!-- App -->
         <script src="lib/bootstrap-3.3.5/app.js"></script>
         <script src="lib/bootstrap-3.3.5/jquery.slimscroll.min.js"></script>

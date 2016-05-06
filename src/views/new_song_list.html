@@ -1,0 +1,120 @@
+<div id="add-song-list-box" class="dialog">
+    <section class="panel panel-default">
+        <header class="panel-heading font-bold">
+            添加到歌单
+            <i class="icon-close" style='float:right;cursor: pointer;'></i>
+        </header>
+        <div class="panel-body" style="padding-bottom: 0px;">
+            <div class="row new-song-list" id="new-song-list">
+                <i class="icon-plus" style='font-size: 24px;'></i>
+                <span style="position: relative;top: -5px;margin-left: 5px;">新建歌单</span>
+            </div>
+            <div id="song-list-row">
+                <div class="row song-list" v-for="i in lists" data-slId="{{i.sl_id}}">
+                    <i class="fa fa-tag" style='font-size: 24px;'></i>
+                    <span style="position: relative;top: -5px;margin-left: 5px;" v-text="i.sl_name"></span>
+
+                    <span  style="position: relative;top: -5px;margin-left: 5px;font-size: 12px;color: #F05050">数目:<span v-text="i.count"></span></span>
+                    <small v-text="i.description"></small>
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div class="dialog_bg"></div>
+<script>
+    seajs.use(['url', 'vue.min', 'storage', 'verify'], function(url, Vue, Storage, verify) {
+        var storage = new Storage();
+        var AddToSongList = function () {
+            this.closeDialog = function () {
+                $('.dialog_bg').fadeOut(400);
+                $('.dialog').fadeOut(200);
+                setTimeout(function () {
+                    $('.dialog,.dialog_bg').remove();
+                }, 500)
+            };
+        };
+
+        AddToSongList.prototype.init = function () {
+            var self = this;
+            $(".icon-close").bind('click', function () {
+                self.closeDialog();
+            });
+            /*检查用户信息*/
+            var userInfo=storage.getItem("u_t");
+            if(!!userInfo){
+                $.ajax({
+                    url:url.get('u_getSongList'),
+                    type:'GET',
+                    data:{
+                        user_id:userInfo.user_id
+                    },
+                    success:function(res){
+                        console.log(res);
+                        var song_list=new Vue({
+                            el:"#song-list-row",
+                            data:{
+                                lists:res.song_lists
+                            }
+                        });
+                        $(".song-list").click(function(){
+                            var sl_id=$(this).attr('data-slId');
+                            console.log('sl_id',sl_id);
+                            $.ajax({
+                                url:url.get('u_song'),
+                                type:"GET",
+                                data:{
+                                    id:window.selected,
+                                    ids:"["+window.selected+"]"
+                                },
+                                success:function(res){
+                                    console.log('===',res);
+                                    var song=res.songs[0];
+                                    var songInfo={
+                                        sl_id:sl_id,
+                                        song_id:song.id,
+                                        song_name:song.name,
+                                        artist_id:song.artists[0].id,
+                                        artist_name:song.artists[0].name,
+                                        mp3Url:song.mp3Url,
+                                        album_name:song.album.id,
+                                        album_id:song.album.id
+                                    };
+                                    $.ajax({
+                                        url:url.get("u_addSongList"),
+                                        data:songInfo,
+                                        type:"GET",
+                                        success:function(res){
+                                            if(res.code==1){
+                                                $('.icon-close').click();
+                                                window.remind("添加成功",'icon-emoticon-smile ');
+                                            }else if(res.code==2){
+                                                $('.icon-close').click();
+                                                window.remind('已经添加过了','icon-ghost' );
+                                            }else if(res.code==0){
+                                                $('.icon-close').click();
+                                                window.remind('抱歉，添加失败','icon-ghost');
+                                            }
+                                        }
+                                    });
+
+                                }
+                            });
+
+                        });
+
+                    }
+                });
+
+            }else {
+
+            }
+            /* $.ajax({
+
+        })*/
+        };
+        var addTo = new AddToSongList();
+        addTo.init();
+    });
+</script>

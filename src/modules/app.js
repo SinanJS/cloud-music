@@ -111,7 +111,17 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
         }
     };
 
-
+    /*全局量*/
+    window.remind=function(txt,icon){
+        if(!!icon){
+            document.querySelector('#remind-icon').className=icon;
+        }
+        $('#remind-content').html(txt);
+        $('.remind-box').fadeIn(500);
+        setTimeout(function(){
+            $('.remind-box').fadeOut(500);
+        },2000);
+    };
     //执行，绑定事件
     var tmplCtrl=new TemplateCtrl();
     //初始化

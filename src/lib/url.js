@@ -11,7 +11,9 @@ define(function (require, exports, module) {
         u_lyric:common_url+"/lyric",
         u_artist:common_url+"/artist",
         u_intro:common_url+"/intro",
-        u_album:common_url+"/album"
+        u_album:common_url+"/album",
+        u_getSongList:common_url+"/get_song_list",
+        u_addSongList:common_url+"/add_song_list"
 
     };
     //下面是组件的url
@@ -24,7 +26,8 @@ define(function (require, exports, module) {
         song:"./views/song.html",
         artist:"./views/artist.html",
         chat:"./views/chat.html",
-        album:"./views/album.html"
+        album:"./views/album.html",
+        add_song_list:'./views/new_song_list.html'
     };
     exports.get = function (name) {
         if (URL[name]) {
