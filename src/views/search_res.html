@@ -32,12 +32,12 @@
                             时长
                         </div>
                     </div>
-                    <div class="row single-song-row" style="display: none;" v-for="i in songs" v-if="i.audition.name">
+                    <div class="row single-song-row" style="display: none;" v-for="i in songs" v-if="i.name">
                         <div class="col-md-3 col-sm-3">
 
                             <a href="javascript:void(0)" class='title-a' data-songId="{{i.id}}">
                                 <i class="fa fa-play-circle-o play-icon" title='播放' data-songId="{{i.id}}"></i>
-                                <span v-text="i.audition.name"></span>
+                                <span v-text="i.name"></span>
                             </a>
                         </div>
                         <div class="col-md-2 col-sm-2">
@@ -160,7 +160,7 @@
                             'singer_name': song.artists[0].name,
                             'singer_pic': song.album.picUrl,
                             'song_name':song.name,
-                            "duration": msTomin(song.audition.playTime),
+                            "duration": msTomin(song.bMusic.playTime),
                             "suffix": "mp3",
                             "url": song.mp3Url,
                             "type": 0,
@@ -204,27 +204,30 @@
                     },
                     success:function(res){
                         var song=res.songs[0];
-                        var item = {
-                            "song_id": song_id,
-                            'singer_name': song.artists[0].name,
-                            'singer_pic': song.album.picUrl,
-                            'song_name':song.name,
-                            "duration": msTomin(song.audition.playTime),
-                            "suffix": "mp3",
-                            "url": song.mp3Url,
-                            "type": 0
-                        };
-                        var flag=pl.addItem(item);
-                       if(flag){
-                           var listLen=$('#playlist li').length;
-                           $("#list-length").html(listLen);
-                           myPlaylist.playlist.map(function(val,index){
-                               if(val.id===song_id){
-                                   myPlaylist.play(index);
-                               }
-                           });
-                       };
-
+                        if(!!song.mp3Url){
+                            var item = {
+                                "song_id": song_id,
+                                'singer_name': song.artists[0].name,
+                                'singer_pic': song.album.picUrl,
+                                'song_name':song.name,
+                                "duration": msTomin(song.bMusic.playTime),
+                                "suffix": "mp3",
+                                "url": song.mp3Url,
+                                "type": 0
+                            };
+                            var flag=pl.addItem(item);
+                            if(flag){
+                                var listLen=$('#playlist li').length;
+                                $("#list-length").html(listLen);
+                                myPlaylist.playlist.map(function(val,index){
+                                    if(val.id===song_id){
+                                        myPlaylist.play(index);
+                                    }
+                                });
+                            };
+                        }else {
+                            window.remind('因版权原因，该作品暂时下架',"icon-ghost");
+                        }
                     }
                 });
             });
@@ -241,25 +244,28 @@
                     },
                     success:function(res){
                         var song=res.songs[0];
-                        var item = {
-                            "song_id": song_id,
-                            'singer_name': song.artists[0].name,
-                            'singer_pic': song.album.picUrl,
-                            'song_name':song.name,
-                            "duration": msTomin(song.audition.playTime),
-                            "suffix": "mp3",
-                            "url": song.mp3Url,
-                            "type": 0
-                        };
-                        var flag=pl.addItem(item);
-
-                        if(flag){
-                            var listLen=$('#playlist li').length;
-                            $("#list-length").html(listLen);
-                            window.remind('成功添加到播放列表');
-                        }
-                        else {
-                            window.remind('已经添加过');
+                        if(!!song.mp3Url) {
+                            var item = {
+                                "song_id": song_id,
+                                'singer_name': song.artists[0].name,
+                                'singer_pic': song.album.picUrl,
+                                'song_name': song.name,
+                                "duration": msTomin(song.bMusic.playTime),
+                                "suffix": "mp3",
+                                "url": song.mp3Url,
+                                "type": 0
+                            };
+                            var flag = pl.addItem(item);
+                            if (flag) {
+                                var listLen = $('#playlist li').length;
+                                $("#list-length").html(listLen);
+                                window.remind('成功添加到播放列表');
+                            }
+                            else {
+                                window.remind('已经添加过');
+                            }
+                        }else {
+                            window.remind('因版权原因，该作品暂时下架',"icon-ghost");
                         }
                     }
                 });
@@ -298,6 +304,7 @@
                 }
             });
         };
+
         SearchRes.prototype.album=function(callback){
             var query={};
             query.s=xhr.getSearch(location.hash).s;

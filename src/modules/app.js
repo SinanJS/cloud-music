@@ -16,7 +16,8 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
         '/song':list('song'),
         '/artist':list('artist'),
         '/chat':list('chat'),
-        '/album':list('album')
+        '/album':list('album'),
+        '/sl':list('sl')
     };
     if (!location.hash) {
         location.hash = '#/home';
@@ -57,6 +58,24 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
                 $('#id-btns').hide();
                 $("#user-info").show();
                 $('#nick-name-content').html(u_t.nick_name);
+                $.ajax({
+                    url:urlList.get("u_getSongList"),
+                    type:"GET",
+                    data:{
+                        user_id:u_t.user_id
+                    },
+                    success:function(res){
+                        console.log("song_ls",res);
+                        var sl=new Vue({
+                            el:"#sl",
+                            data:{
+                                sl:res.song_lists
+                            }
+                        });
+                    }
+                });
+
+
             }
             var listLen=$('#playlist li').length;
             $("#list-length").html(listLen);
@@ -115,6 +134,8 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
     window.remind=function(txt,icon){
         if(!!icon){
             document.querySelector('#remind-icon').className=icon;
+        }else {
+            document.querySelector('#remind-icon').className="icon-emoticon-smile";
         }
         $('#remind-content').html(txt);
         $('.remind-box').fadeIn(500);
@@ -151,5 +172,5 @@ seajs.use(['director', 'gethtml', 'playlist','vue.min','url','storage'], functio
         var singer_id=$(this).attr('data-singerId');
         location.hash='#/artist?id='+singer_id;
     });
-    window.intervalId=0;
+      window.intervalId=0;
 });

@@ -84,7 +84,6 @@ define(function (require, exports, module) {
                 return false;
             }
 
-
         } else {
             var p = {
                 list: [item]

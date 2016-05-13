@@ -77,9 +77,11 @@
                                         song_name:song.name,
                                         artist_id:song.artists[0].id,
                                         artist_name:song.artists[0].name,
+                                        artist_pic:song.artists[0].picUrl,
                                         mp3Url:song.mp3Url,
                                         album_name:song.album.id,
-                                        album_id:song.album.id
+                                        album_id:song.album.id,
+                                        playtime:song.bMusic.playTime
                                     };
                                     $.ajax({
                                         url:url.get("u_addSongList"),
@@ -110,9 +112,6 @@
             }else {
 
             }
-            /* $.ajax({
-
-        })*/
         };
         var addTo = new AddToSongList();
         addTo.init();

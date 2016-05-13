@@ -1,0 +1,267 @@
+<div class="container" style="width: 990px">
+    <div class="row" id="sl_detail">
+        <div class="col-md-5">
+            <div class="album" style="width: 100%;margin-top: 25px;margin-bottom: 25px;">
+                <div class="album-bg-big">
+                    <img class='cover' src="{{sl.cover_url}}" data-id="{{sl.sl_id}}" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7" style="min-height: 304px;">
+            <div class="detail-singer">
+                <b class="tab-singer">歌单</b>
+                <span class="singer-name" v-text="sl.sl_name"> </span>
+                <ul class="singer-ul">
+                    <li><span>创建者：</span><span class='singer' v-text="sl.user_name" data-id={{sl.user_id}}" onclick="location.hash='#/artist?id={{artists[0].id}}'"></span></li>
+                    <li><span>创建时间：</span><span v-text="sl.create_time.substr(0,10)"></span></li>
+                    <li v-if="company"><span>发行公司：</span><span v-text='company'></span></li>
+                </ul>
+                <div class="btn-group">
+                    <button class="btn btn-primary" id='add-playlist' type="button">添加到播放列表</button>
+                    <button class="btn btn-info" type="button">分享</button>
+                </div>
+                <div class="singer-intro" id="singer-intro">
+                    <div class="section" v-if="sl.description">
+                        <p class="sm-title">
+                            <b class="tab-title"></b>
+                            <span v-text="sl.description"></span>
+                        </p>
+                    </div>
+                    <div class="no-intro" v-else>
+                        <i class="icon-earphones"></i>暂无描述
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <section class="panel panel-default">
+            <header class="panel-heading bg-light">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active"><a href="#panel-song" style="background: #F7FAFA;" data-toggle="tab">歌曲列表</a></li>
+                    <!--<li class=""><a href="#panel-intro" data-toggle="tab">歌手介绍</a></li>-->
+                </ul>
+            </header>
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="panel-song">
+                        <div class="tab-pane active">
+                            <div class="row title-row">
+                                <div class="col-md-3 col-sm-3">
+                                    歌名
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    操作
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    歌手
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    专辑
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    时长
+                                </div>
+                            </div>
+                            <div class="row single-song-row" v-for="i in songs">
+                                <div class="col-md-3 col-sm-3">
+
+                                    <a href="javascript:void(0)" class='title-a' data-songId="{{i.song_id}}">
+                                        <i class="fa fa-play-circle-o play-icon" title='播放' data-songId="{{i.song_id}}"></i>
+                                        <span v-text="i.song_name"></span>
+                                    </a>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <i class="fa  fa-plus-square-o add-playlist" title="添加到播放列表" style="cursor: pointer;" data-songId="{{i.song_id}}"></i>
+                                    &nbsp;
+                                    <i class="fa fa-folder-o add-song-list" title="添加到歌单" style="cursor: pointer;" data-songId="{{i.song_id}}"></i>
+                                </div>
+                                <div class="col-md-2 col-sm-2" data-singerId="i.artist_id">
+                                    <a v-text="i.artist_name" href="javascript:void(0)"  onclick="window.location.hash='#/artist?id={{i.artist_id}}'"></a>
+                                </div>
+                                <div class="col-md-3 col-sm-3 album-name">
+                                    <a v-text="i.album_name" href="javascript:void(0)"  onclick="window.location.hash='#/album?id={{i.album_id}}'"></a>
+                                </div>
+                                <div class="col-md-2 col-sm-2" v-text="i.playtime | msToMin"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    seajs.use(['vue.min','xhr','url',"filter"],function(Vue,xhr,url,filter){
+        filter.msToMin();
+        filter.msToDateOnly();
+        var SongList = function(){
+            this.albumId=xhr.getSearch(window.location.hash).id;
+        };
+
+        //转化成正常时间字符串
+        function msTomin(val){
+            var time=new Date(val);
+            var min=time.getMinutes();
+            var s=time.getSeconds();
+            if(min<10){
+                min="0"+min.toString();
+            }
+            if(s<10){
+                s= "0"+ s.toString();
+            }
+            return min.toString()+":"+ s.toString();
+        }
+        //初始化，包括填充歌单基本信息
+        SongList.prototype.init=function(){
+            $.ajax({
+                url:url.get("u_slDetail"),
+                type:"GET",
+                data:{
+                    id:xhr.getSearch(location.hash).id,
+                },
+                success:function(res){
+                    var sl_detail=new Vue({
+                        el:"#sl_detail",
+                        data:{
+                            sl:res.sl
+                        }
+                    });
+                }
+            });
+        };
+        //获取歌曲列表
+        SongList.prototype.songs=function(){
+            $.ajax({
+                url:url.get('u_slSong'),
+                type:"GET",
+                data:{
+                    id:xhr.getSearch(location.hash).id
+                },
+                success:function(res){
+                    var sl_song=new Vue({
+                        el:"#panel-song",
+                        data:{
+                            songs:res.songs
+                        }
+                    });
+                    $('.play-icon').bind('click',function(){
+                        $('.play-icon').css('color','#788188');
+                        $(this).css('color','#F05050');
+                        var song_id=$(this).attr('data-songId');
+                        $.ajax({
+                            url:url.get('u_song'),
+                            type:"GET",
+                            data:{
+                                id:song_id,
+                                ids:"["+song_id+"]"
+                            },
+                            success:function(res){
+                                var song=res.songs[0];
+                                var item = {
+                                    "song_id": song_id,
+                                    'singer_name': song.artists[0].name,
+                                    'singer_pic': song.album.picUrl,
+                                    'song_name':song.name,
+                                    "duration": msTomin(song.bMusic.playTime),
+                                    "suffix": "mp3",
+                                    "url": song.mp3Url,
+                                    "type": 0
+                                };
+                                var flag=pl.addItem(item);
+                                if(flag){
+                                    var listLen=$('#playlist li').length;
+                                    $("#list-length").html(listLen);
+                                    myPlaylist.playlist.map(function(val,index){
+                                        if(val.id===song_id){
+                                            myPlaylist.play(index);
+                                        }
+                                    });
+                                };
+
+                            }
+                        });
+                    });
+                    $('.add-playlist').bind('click',function(){
+                        var song_id=$(this).attr('data-songId');
+                        $.ajax({
+                            url:url.get('u_song'),
+                            type:"GET",
+                            data:{
+                                id:song_id,
+                                ids:"["+song_id+"]"
+                            },
+                            success:function(res){
+                                var song=res.songs[0];
+                                var item = {
+                                    "song_id": song_id,
+                                    'singer_name': song.artists[0].name,
+                                    'singer_pic': song.album.picUrl,
+                                    'song_name':song.name,
+                                    "duration": msTomin(song.bMusic.playTime),
+                                    "suffix": "mp3",
+                                    "url": song.mp3Url,
+                                    "type": 0
+                                };
+                                var flag=pl.addItem(item);
+
+                                if(flag){
+                                    var listLen=$('#playlist li').length;
+                                    $("#list-length").html(listLen);
+                                    window.remind('成功添加到播放列表');
+                                }
+                                else {
+                                    window.remind('已经添加过');
+                                }
+                            }
+                        });
+                    });
+                }
+            });
+        };
+        //添加到本地播放列表
+        SongList.prototype.addToPlayList= function () {
+            $.ajax({
+                url:url.get('u_slSong'),
+                type:"GET",
+                data:{
+                    id:xhr.getSearch(location.hash).id
+                },
+                success:function(res){
+                    //res应该是个数组，需要遍历才能获得
+                    var songs=res.songs;
+                    var pl_item=[];
+                    for (var i=0;i<songs.length;i++){
+                        var item = {
+                            "song_id": songs[i].song_id,
+                            'singer_name': songs[i].artist_name,
+                            'singer_pic': songs[i].artist_pic,
+                            'song_name':songs[i].song_name,
+                            "duration": msTomin(songs[i].playtime),
+                            "suffix": "mp3",
+                            "url": songs[i].mp3Url,
+                            "type": 0
+                        };
+                        console.log(item);
+                        pl.addItem(item);
+                        var listLen = $('#playlist li').length;
+                        $("#list-length").html(listLen);
+                        window.remind('添加成功！');
+                    }
+
+
+                }
+            });
+        };
+
+        var sl=new SongList();
+        sl.init();
+        sl.songs();
+        $("#add-playlist").bind('click',function(){
+            sl.addToPlayList();
+        });
+    });
+
+</script>
